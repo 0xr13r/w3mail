@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href='https://fonts.googleapis.com/css?family=PT Mono' rel='stylesheet'>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %} - w3mail</title>
+    <style>
+        .message {
+            font-size: 0.8em;
+            padding: 10px;
+            margin: 5px;
+            color: #000000;
+            background-color: #ffffff
+        }
+
+        nav a {
+            color: #ffffff;
+            font-size: 1em;
+            margin-left: 1px;
+            margin-right: 20px;
+            text-decoration: none;
+            float: center;
+        }
+
+        .alert {
+            padding: 20px;
+            margin: 5px;
+            color: #970020;
+            background-color: #ffffff;
+        }
+
+        #bannerimage {
+            width: 100%;
+            background-image: url("/static/w3mail_banner.jpg");
+            height: 120px;
+            background-color: #000000;
+            background-position: center;
+            background-repeat: repeat-y;
+            margin-bottom: 10px;
+        }
+
+        body {
+            font-family: 'PT Mono';font-size: 16px;
+            color: #ffffff;
+            background-color: #000000;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid;
+            border-collapse: collapse;
+            color: #ffffff;
+            width: 100%;
+            table-layout: fixed;
+            text-align: left;
+            font-size: 0.5em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bannerimage"></div>
+    <input type="image" src='/static/MetaMaskLogo.png' id='connectWallet' name="connect_wallet"
+        style="float:right; width:7%; height:7%; position:absolute;top: 40px;;right:0px;" alt="Connect Wallet"
+        onclick="connectWalletwithMetaMask();" />
+    <nav>
+        <a href="{{ url_for('inbox') }}">Inbox</a>
+        <a href="{{ url_for('outbox') }}">Outbox</a>
+        <a href="{{ url_for('compose') }}">Compose</a>
+        <!-- <button id='connectWallet' onclick="connectWalletwithMetaMask();" style="float:right">Connect Wallet</button> -->
+        <text id="walletAddress" style="float:right; margin-right: 10px;"></text>
+        <script type="text/javascript" src="{{ url_for('static', filename='wallet_connect.js')}}"></script>
+
+    </nav>
+    <hr>
+    <div class="content">
+        {% for message in get_flashed_messages() %}
+        <div class="alert">{{ message }}</div>
+        {% endfor %}
+        {% block content %} {% endblock %}
+    </div>
+</body>
+
+</html>

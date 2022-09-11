@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h3>{% block title %} {{ heading_message }} {% endblock %}</h3>
+  <table id="message_data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Recipient Address</th>
+        <th>Message Content</th>
+        <th>Sent At</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for message in messages %}
+        <tr>
+          <td>{{ message['recipient'] }}</td>
+          <td>{{ message['message'] }}</td>
+          <td>{{ message['sent_at'] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
