@@ -32,6 +32,10 @@
 
 <body>
 
+  <center>
+  <text id='walletAddress' style="text-align:center;"></text>
+  </center>
+
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
   <div class="centerContent">
@@ -40,8 +44,9 @@
 
   <input class="centerButton" type="image" src='/static/Homepage button.png' id='connectWallet' name="connect_wallet"
     style="height:10%; width: 20%;" alt="Connect Wallet" onclick="connectWalletwithMetaMask();storePublicKeyForMessageEncryption();" />
+    
   <script type="text/javascript" src="{{ url_for('static', filename='wallet_connect.js')}}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='store_public_key.js')}}"></script>
+
 
 
 </body>

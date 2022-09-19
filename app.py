@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
+from sqlalchemy.exc import IntegrityError
 from sre_constants import SUCCESS
 from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
 import os
+import logging
 from flask_cors import CORS
 from models import setup_db, db_drop_and_create_all, AddressPublicEncryptionKeys, Messages
 
@@ -11,14 +13,13 @@ CORS(app)
 
 messages = []
 
-""" uncomment at the first time running the app """
-db_drop_and_create_all()
+# """ uncomment at the first time running the app """
+# db_drop_and_create_all()
 
 @app.route('/', methods=['GET','POST'])
 def home():
     if request.method=='POST':
         data = request.get_json()
-
         try:
             AddressPublicEncryptionKeys(
                 wallet_address=data.get('wallet_address'),
@@ -26,10 +27,14 @@ def home():
             ).insert()
 
             return jsonify(success=True, data="Public encryption key stored U+1F50F")
-        except Exception as e:
-            return jsonify(success=False, data="Public encryption key already stored. ")
-
+        except IntegrityError as error:
+            #if reconnecting a wallet that has been connected before - we will have already stored a the public encryption key
+            if "already exists" in error.args[0]:
+                return jsonify(success=True, data="Public encryption key already stored")
+            else:
+                return jsonify(success=False, data="Error collecting public encryption key. Please try reconnecting to MetaMask.")
     else:
+
         return render_template('homepage.html')
 
 @app.route('/inbox')

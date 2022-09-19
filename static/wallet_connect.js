@@ -4,20 +4,20 @@ const walletAddress = document.getElementById('walletAddress')
 
 function checkInstalled() {
     if (typeof window.ethereum == 'undefined') {
-        console.log(connectWallet)
-        connectWallet.innerText = 'MetaMask isnt installed, please install it'
-        connectWallet.classList.remove()
-        connectWallet.classList.add()
-        return false
+        walletAddress.innerText = "Welcome to w3mail, MetaMask is not installed. Please install it to proceed."
+        walletAddress.classList.remove()
+        walletAddress.classList.add()
+        return false;
     }
 
     connectWallet.addEventListener('click', connectWalletwithMetaMask)
+    return true;
 }
 
 async function connectWalletwithMetaMask() {
     let accounts = await window.ethereum.request({ method: 'eth_accounts' })
 
-    if (!accounts) {
+    if ( accounts.length === 0) {
         await window.ethereum.request({ method: 'eth_requestAccounts' })
             .catch((e) => {
                 console.error(e.message)
@@ -41,26 +41,67 @@ async function connectWalletwithMetaMask() {
     accounts = await window.ethereum.request({ method: 'eth_accounts' })
     window.userWalletAddress = accounts[0]
     walletAddress.innerHTML = "You are signed in with: " + window.userWalletAddress
+
     return
 
 }
 
+async function storePublicKeyForMessageEncryption() {
+    let pubkey_eth = await window.ethereum.request({
+        "method": "eth_getEncryptionPublicKey",
+        "params": [window.userWalletAddress], 
+    });
+
+    var address_pubkey_kv = {
+        "wallet_address": window.userWalletAddress,
+        "public_key": pubkey_eth
+    }
+
+    jQuery.ajax({
+        type: "POST",
+        url: '/',
+        contentType: "application/json",
+        data: JSON.stringify(address_pubkey_kv),
+        dataType: "json",
+        success: function(response) {
+            if (response.success == true) {
+                alert("Wallet: "+  window.userWalletAddress + " succesfully connected. Redirecting to inbox 📥");
+                window.location = "/inbox";
+            } 
+            else {
+                alert("Error connecting to wallet - public encryption key not stored. Please try again by reconnecting to MetaMask 🦊.");
+                window.location = "/";
+            };
+        },
+        error: function(err) {
+            console.log(err);
+        }
+    });
+}
 
 async function checkConnectedWallet() {
-    const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+    let accounts = await window.ethereum.request({ method: 'eth_accounts' })
 
-    if (!accounts || accounts[0] == undefined) {
-        walletAddress.innerHTML = "No Wallet Connected"
-        connectWallet.innerText = "Connect Wallet"
-        return
+    if ( accounts.length === 0 ){
+        console.log("No wallet connected")
+        walletAddress.innerText = "Welcome to w3mail! Please connect to MetaMask to begin 🦊."
+        return;
     }
 
     window.userWalletAddress = accounts[0]
-    walletAddress.innerHTML = "You are signed in with: " + window.userWalletAddress
-    connectWallet.innerText = "Switch Wallet"
+    console.log("Connected with: " + window.userWalletAddress)
+
+    walletAddress.innerText = "Welcome to w3mail! You're connected to " + window.userWalletAddress
 }
 
+
 window.addEventListener('DOMContentLoaded', () => {
-    checkInstalled()
-    checkConnectedWallet()
+    if (checkInstalled()){
+        console.log("MetaMask installed: True")
+        checkConnectedWallet()
+    }
+    else {
+        console.log("MetaMask installed: False")
+    }
+    
 })
