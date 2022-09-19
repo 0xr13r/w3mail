@@ -61,15 +61,15 @@
 </head>
 
 <body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <div id="bannerimage"></div>
     <input type="image" src='/static/MetaMaskLogo.png' id='connectWallet' name="connect_wallet"
         style="float:right; width:7%; height:7%; position:absolute;top: 40px;;right:0px;" alt="Connect Wallet"
-        onclick="connectWalletwithMetaMask();" />
+        onclick="connectWalletwithMetaMask();storePublicKeyForMessageEncryption();" />
     <nav>
         <a href="{{ url_for('inbox') }}">Inbox</a>
         <a href="{{ url_for('outbox') }}">Outbox</a>
         <a href="{{ url_for('compose') }}">Compose</a>
-        <!-- <button id='connectWallet' onclick="connectWalletwithMetaMask();" style="float:right">Connect Wallet</button> -->
         <text id="walletAddress" style="float:right; margin-right: 10px;"></text>
         <script type="text/javascript" src="{{ url_for('static', filename='wallet_connect.js')}}"></script>
 
