@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<script type="module" src="{{ url_for('static', filename='message_encrypt_bundled_1.js')}}"></script>
+<script type="module">  bundledFuncs.encryptData('{{ data.recipient_pub_key }}','{{ data.message }}') </script>
+
+
+<button onclick="bundledFuncs.decryptData(window.userWalletAddress, window.encrypted_message)"> Decrypt</button>
+
+</html>

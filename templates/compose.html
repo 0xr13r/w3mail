@@ -27,10 +27,7 @@
                   cols="180"
                   >{{ request.form['content'] }}</textarea>
         <br>
-        <!-- signMessage(document.getElementById('message_content').value); -->
-        <!-- type="submit"  -->
-        <button id='test_button' onclick="signMessage();">Sign and Send Message </button>
-        <script type="text/javascript" src="{{ url_for('static', filename='sign_message.js')}}"></script>
-        <!-- <script type="text/javascript" src="{{ url_for('static', filename='encrypt_message.js')}}"></script> -->
+        <button type="submit">Encrypt and Send</button>
+                
     </form>
 {% endblock %}

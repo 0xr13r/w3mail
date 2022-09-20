@@ -52,6 +52,7 @@ async function storePublicKeyForMessageEncryption() {
         "params": [window.userWalletAddress], 
     });
 
+
     var address_pubkey_kv = {
         "wallet_address": window.userWalletAddress,
         "public_key": pubkey_eth
