@@ -10,46 +10,49 @@ function checkInstalled() {
         return false;
     }
 
-    connectWallet.addEventListener('click', connectWalletwithMetaMask)
+    // connectWallet.addEventListener('click', connectWalletwithMetaMask)
     return true;
 }
 
 async function connectWalletwithMetaMask() {
-    let accounts = await window.ethereum.request({ method: 'eth_accounts' })
+    let accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+        params: [{
+            eth_accounts: {},
+        }]
+    })
+    .catch((e) => {
+        console.error(e.message)
+    });
 
-    if ( accounts.length === 0) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' })
-            .catch((e) => {
-                console.error(e.message)
-            })
-    }
-    else {
+    if( accounts[0] === window.userWalletAddress) {
         await window.ethereum.request({
             method: 'wallet_requestPermissions',
             params: [{
                 eth_accounts: {},
             }]
         })
-            .catch((e) => {
-                console.error(e.message)
-            })
-       
-        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        .catch((e) => {
+            console.error(e.message)
+        })
 
+        accounts = await window.ethereum.request({ method: 'eth_accounts' })
     }
 
-    accounts = await window.ethereum.request({ method: 'eth_accounts' })
+    console.log(accounts)
+
     window.userWalletAddress = accounts[0]
     walletAddress.innerHTML = "You are signed in with: " + window.userWalletAddress
 
+    storePublicKeyForMessageEncryption()
     return
 
 }
 
 async function storePublicKeyForMessageEncryption() {
     let pubkey_eth = await window.ethereum.request({
-        "method": "eth_getEncryptionPublicKey",
-        "params": [window.userWalletAddress], 
+        method: "eth_getEncryptionPublicKey",
+        params: [window.userWalletAddress], 
     });
 
 
@@ -66,8 +69,7 @@ async function storePublicKeyForMessageEncryption() {
         dataType: "json",
         success: function(response) {
             if (response.success == true) {
-                alert("Wallet: "+  window.userWalletAddress + " succesfully connected. Redirecting to inbox 📥");
-                window.location = "/inbox";
+                window.location = "/inbox/"+ window.userWalletAddress;
             } 
             else {
                 alert("Error connecting to wallet - public encryption key not stored. Please try again by reconnecting to MetaMask 🦊.");
@@ -92,7 +94,7 @@ async function checkConnectedWallet() {
     window.userWalletAddress = accounts[0]
     console.log("Connected with: " + window.userWalletAddress)
 
-    walletAddress.innerText = "Welcome to w3mail! You're connected to " + window.userWalletAddress
+    walletAddress.innerText = "You're connected to w3mail with " + window.userWalletAddress
 }
 
 

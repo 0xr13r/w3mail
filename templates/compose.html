@@ -10,14 +10,6 @@
                cols="180"
                   >{{ request.form['recipient'] }}</textarea>
         <br>
-        <label for="Subject">Subject</label>
-        <br>
-        <textarea type="text" name="subject"
-               placeholder="Message subject"
-               cols="180"
-                  >{{ request.form['subject'] }}</textarea>
-        <br>
-
         <label for="content">Message</label>
         <br>
         <textarea id="message_content"
@@ -27,6 +19,17 @@
                   cols="180"
                   >{{ request.form['content'] }}</textarea>
         <br>
+
+        <input type="hidden" name="sender" id="sender_address">{{ request.form['sender'] }}</textarea>
+        <script type="module" >
+            async function checkConnectedWallet() {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+                document.getElementById('sender_address').value = accounts[0] ;
+            }
+            checkConnectedWallet()
+        </script>
+        
+
         <button type="submit">Encrypt and Send</button>
                 
     </form>

@@ -1,10 +1,11 @@
 const ethUtil = require('ethereumjs-util');
 const sigUtil = require('@metamask/eth-sig-util');
-const ascii85 = require('ascii85');
+const atob = require('atob');
+const utf8 = require('utf8');
 
-async function encryptData(publicKey, message)  {
+async function encryptData(publicKey, message, nonce)  {
 
-  console.log("Encrypting message")
+  console.log("Encrypting your message")
 
   const encryptedMessage = ethUtil.bufferToHex(
     Buffer.from(
@@ -12,6 +13,7 @@ async function encryptData(publicKey, message)  {
         sigUtil.encrypt({
           publicKey: publicKey,
           data: message,
+          nonce: nonce,
           version: 'x25519-xsalsa20-poly1305',
         })
       ),
@@ -19,45 +21,29 @@ async function encryptData(publicKey, message)  {
     )
   );
 
-  window.encrypted_message = encryptedMessage
 
-  console.log(encryptedMessage);
+  window.encrypted_message = encryptedMessage
   return encryptedMessage;
 }
 
 
 async function decryptData(data) {
 
-  console.log("Decrypting Data")
+  console.log("Decrypting your message")
 
   let accounts = await window.ethereum.request({ method: 'eth_accounts' })
 
-  console.log(accounts[0])
-
-  console.log(data)
-
-  const structuredData = {
-    version: 'x25519-xsalsa20-poly1305',
-    ephemPublicKey: data.slice(0, 32).toString('base64'),
-    nonce: data.slice(32, 56).toString('base64'),
-    ciphertext: data.slice(56).toString('base64'),
-  };
-
-  const ct = `0x${Buffer.from(JSON.stringify(structuredData), 'utf8').toString('hex')}`;
-
-  
   const decrypt = await window.ethereum.request({
     method: 'eth_decrypt',
     params: [data, accounts[0]],
   });
 
-  console.log(ascii85.decode(decrypt))
-  
-  return ascii85.decode(decrypt);
-}
+  const decryptedMessage = decrypt.replace('b&#39;','').replace('&#39;','')
 
+  return atob(decryptedMessage);
+}
 
 module.exports = {
     'encryptData': encryptData,
-    'decryptData':decryptData
+    'decryptData': decryptData
 };

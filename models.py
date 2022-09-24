@@ -1,5 +1,6 @@
 import datetime
 import os
+import json
 from sqlalchemy import Column, String, BigInteger, Boolean, create_engine
 from flask_sqlalchemy import SQLAlchemy
 
@@ -66,7 +67,7 @@ class Messages(db.Model):
     ipfs_cid = Column(String(255), unique=True)
     message_sent_timestamp = Column(db.DateTime)
     is_message_read = Column(Boolean)
-
+    message_read_timestamp = Column(db.DateTime)
 
     def __init__(
         self, 
@@ -85,14 +86,22 @@ class Messages(db.Model):
         self.message_read_timestamp = message_read_timestamp
 
     def __repr__(self): 
-        return "(%r, %r, %r, %r, %r, %r)" %(
-            self.sender_address,
-            self.receipient_address,
-            self.ipfs_cid,
-            self.message_sent_timestamp,
-            self.is_message_read,
-            self.message_read_timestamp
-        )
+        return json.dumps({
+            "sender":self.sender_address,
+            "recipient": self.receipient_address,
+            "ipfs_cid": self.ipfs_cid,
+            "sent_at": self.message_sent_timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+            "is_read":self.is_message_read,
+            "read_at": None if not self.message_read_timestamp else self.message_read_timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        })
+        # return "(%r, %r, %r, %r, %r, %r)" %(
+        #     self.sender_address,
+        #     self.receipient_address,
+        #     self.ipfs_cid,
+        #     self.message_sent_timestamp,
+        #     self.is_message_read,
+        #     self.message_read_timestamp
+        # )
 
     def insert(self):
         db.session.add(self)

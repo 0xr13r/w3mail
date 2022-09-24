@@ -41,22 +41,47 @@
         }
 
         body {
-            font-family: 'PT Mono';font-size: 16px;
+            font-family: 'PT Mono';
+            font-size: 16px;
             color: #ffffff;
             background-color: #000000;
         }
 
-        table,
-        th,
-        td {
-            border: 1px solid;
-            border-collapse: collapse;
+        button {
+            display: inline-block;
+            border: 0.1;
+            border-color: #ffffff;
+            padding: 0.5rem 1rem;
+            margin: 0;
+            text-decoration: none;
+            background: #000000;
             color: #ffffff;
-            width: 100%;
-            table-layout: fixed;
-            text-align: left;
-            font-size: 0.5em;
+            font-family: 'PT Mono';
+            font-size: 0.5rem;
+            line-height: 1;
+            cursor: pointer;
+            text-align: center;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
+
+        a.button {
+            display: inline-block;
+            border: 0.1;
+            border-color: #ffffff;
+            padding: 0.5rem 1rem;
+            margin: 0;
+            text-decoration: none;
+            background: #000000;
+            color: #ffffff;
+            font-family: 'PT Mono';
+            font-size: 0.5rem;
+            line-height: 1;
+            cursor: pointer;
+            text-align: center;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        } 
     </style>
 </head>
 
@@ -65,13 +90,16 @@
     <div id="bannerimage"></div>
     <input type="image" src='/static/MetaMaskLogo.png' id='connectWallet' name="connect_wallet"
         style="float:right; width:7%; height:7%; position:absolute;top: 40px;;right:0px;" alt="Connect Wallet"
-        onclick="connectWalletwithMetaMask();storePublicKeyForMessageEncryption();" />
+        onclick="connectWalletwithMetaMask();" />
     <nav>
-        <a href="{{ url_for('inbox') }}">Inbox</a>
-        <a href="{{ url_for('outbox') }}">Outbox</a>
-        <a href="{{ url_for('compose') }}">Compose</a>
+
+        <script type="text/javascript" src="{{ url_for('static', filename='get_messages.js')}}"></script>
+        <button onclick="retrieveMessages('inbox');" class="button">Inbox</button>
+        <button onclick="retrieveMessages('outbox');" class="button">Outbox</button>
+        <a href="{{ url_for('compose') }}" class="button">Compose</a>
         <text id="walletAddress" style="float:right; margin-right: 10px;"></text>
         <script type="text/javascript" src="{{ url_for('static', filename='wallet_connect.js')}}"></script>
+       
 
     </nav>
     <hr>
@@ -82,5 +110,7 @@
         {% block content %} {% endblock %}
     </div>
 </body>
+
+
 
 </html>

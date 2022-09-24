@@ -1,24 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h3>{% block title %} {{ heading_message }} {% endblock %}</h3>
-  <table id="message_data" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Recipient Address</th>
-        <th>Message Content</th>
-        <th>Sent At</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for message in messages %}
-        <tr>
-          <td>{{ message['recipient'] }}</td>
-          <td>{{ message['message'] }}</td>
-          <td>{{ message['sent_at'] }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <h4>{% block title %} {{ heading_message }} {% endblock %}</h4>
+    {% for message in messages %}
+        <div class='message'>
+            <!-- <p>{{ message['sender'] }}</p> -->
+            <p>{{ message['recipient'] }}</p>
+            <p>{{ message['ipfs_cid'] }}</p>
+            <p>{{ message['sent_at'] }}</p>
+        </div>
+    {% endfor %}
 {% endblock %}
-
