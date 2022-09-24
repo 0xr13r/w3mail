@@ -8,7 +8,7 @@
 <script type="text/javascript">
     jQuery.ajax({
         type: "POST",
-        url: '/outbox',
+        url: '/outbox/sending',
         contentType: "application/json",
         data: JSON.stringify({
             "encryptedMessage": window.encrypted_message,
@@ -19,7 +19,7 @@
         success: function(response) {
             if (response.success == true) {
                 alert("Message successfully sent");
-                window.location = "/outbox";
+                window.location = "/outbox/"+'{{ data.sender }}';
             } 
             else {
                 alert("Error sending message - please try again");

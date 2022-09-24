@@ -6,7 +6,7 @@
         <label for="To">To</label>
         <br>
         <textarea type="text" name="recipient"
-               placeholder="ETH address or ENS of recipient"
+               placeholder="ETH address recipient" 
                cols="180"
                   >{{ request.form['recipient'] }}</textarea>
         <br>
@@ -14,7 +14,7 @@
         <br>
         <textarea id="message_content"
                   name="content"
-                  placeholder="Compose your message here. You will sign the message with your MetaMask and encrypt the message with the recipient's public key before sending"
+                  placeholder="Compose your message here. This will be encrypted with the recipient's public key before sending to IPFS"
                   rows="20"
                   cols="180"
                   >{{ request.form['content'] }}</textarea>

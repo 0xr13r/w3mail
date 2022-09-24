@@ -32,11 +32,12 @@
 
         #bannerimage {
             width: 100%;
-            background-image: url("/static/w3mail_banner.jpg");
+            background-image: url("/static/circle_w3mail_icon.png");
             height: 120px;
             background-color: #000000;
-            background-position: center;
-            background-repeat: repeat-y;
+            background-position: left;
+            background-repeat: no-repeat;
+            margin-left: 10px;
             margin-bottom: 10px;
         }
 
@@ -64,40 +65,29 @@
             -webkit-appearance: none;
             -moz-appearance: none;
         }
-
-        a.button {
-            display: inline-block;
-            border: 0.1;
-            border-color: #ffffff;
-            padding: 0.5rem 1rem;
-            margin: 0;
-            text-decoration: none;
-            background: #000000;
-            color: #ffffff;
-            font-family: 'PT Mono';
-            font-size: 0.5rem;
-            line-height: 1;
-            cursor: pointer;
-            text-align: center;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-        } 
     </style>
 </head>
 
 <body>
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <div id="bannerimage"></div>
+    <div id="bannerimage">
+        <center>
+            <h1 style="text-align: center; position:relative;top:40px;">w3mail</h1>
+        </center>
+    </div>
+
     <input type="image" src='/static/MetaMaskLogo.png' id='connectWallet' name="connect_wallet"
-        style="float:right; width:7%; height:7%; position:absolute;top: 40px;;right:0px;" alt="Connect Wallet"
+        style="float:right; width:7%; height:7%; position:absolute;top:40px;right:0px;" alt="Connect Wallet"
         onclick="connectWalletwithMetaMask();" />
+
     <nav>
 
         <script type="text/javascript" src="{{ url_for('static', filename='get_messages.js')}}"></script>
         <button onclick="retrieveMessages('inbox');" class="button">Inbox</button>
         <button onclick="retrieveMessages('outbox');" class="button">Outbox</button>
-        <a href="{{ url_for('compose') }}" class="button">Compose</a>
-        <text id="walletAddress" style="float:right; margin-right: 10px;"></text>
+        <a href="{{ url_for('compose') }}"><button type="button", class="button">Compose</button></a>
+        <text id="walletAddress" style="float:right; margin-right: 10px; font-size:0.6em;"></text>
         <script type="text/javascript" src="{{ url_for('static', filename='wallet_connect.js')}}"></script>
        
 
