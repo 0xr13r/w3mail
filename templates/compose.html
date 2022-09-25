@@ -20,7 +20,7 @@
                   >{{ request.form['content'] }}</textarea>
         <br>
 
-        <input type="hidden" name="sender" id="sender_address">{{ request.form['sender'] }}</textarea>
+        <input type="hidden" name="sender" id="sender_address" style="display:none;" value="{{ request.form['sender'] }}">
         <script type="module" >
             async function checkConnectedWallet() {
                 const accounts = await window.ethereum.request({ method: 'eth_accounts' })

@@ -107,7 +107,7 @@ def compose():
         
         if not recipient_public_encryption_key:
             logging.error("Since the recipient is currently not using w3mail we don't have their public encryption key. You cannot send a message at this time")
-            flash(f'{recipient} is not currently using w3mail.')
+            flash(f"{recipient} is not currently using w3mail so we don't have their public encryption key")
             return render_template('compose.html')
 
         public_key = recipient_public_encryption_key.public_encryption_key
