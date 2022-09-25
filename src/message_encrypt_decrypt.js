@@ -66,17 +66,23 @@ async function decryptMessageWithMM(data, account) {
     params: [data, account]
   });
 
-  const decryptedMessage = decrypt.replace('b&#39;', '').replace('&#39;', '')
+  if (decrypt) {
+    const decryptedMessage = decrypt.replace('b&#39;', '').replace('&#39;', '')
 
-  var overlay = document.getElementById("overlay");
-  var message_box = document.getElementById('decrypted_message_box')
+    var overlay = document.getElementById("overlay");
+    var message_box = document.getElementById('decrypted_message_box')
 
-  message_box.innerText = atob(decryptedMessage)
-  overlay.style.display = "block";
-  message_box.style.display = "block";
+    message_box.innerText = atob(decryptedMessage)
+    overlay.style.display = "block";
+    message_box.style.display = "block";
 
 
-  return true;
+    return true;
+  }
+
+  alert("Get to fuck mate - You are unable to decrypt this message as your are not the recipient.");
+  return false;
+  
 }
 
 module.exports = {

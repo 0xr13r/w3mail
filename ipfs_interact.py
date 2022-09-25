@@ -42,7 +42,6 @@ def ipfs_upload(encrypted_message:str, sender: str, recipient:str) -> bool:
 
 def ipfs_download(cid):
     #test code
-    time.sleep(1)
     encrypted_message = mock_ipfs_interaction[cid]
     return encrypted_message
 

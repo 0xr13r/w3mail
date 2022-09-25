@@ -4,7 +4,7 @@ import logging
 import os
 from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
-from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
+from flask import Flask, render_template, request, flash, jsonify
 from flask_cors import CORS
 from models import setup_db, db_drop_and_create_all, AddressPublicEncryptionKeys, Messages
 from ipfs_interact import ipfs_upload, ipfs_download
