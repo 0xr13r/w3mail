@@ -1,36 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h3>{% block title %} Compose w3mail {% endblock %}</h3>
+    <h3>{% block title %} Compose w3mail 🖊️{% endblock %}</h3>
     <form method="post">
         <label for="To">To</label>
         <br>
         <textarea type="text" name="recipient"
-               placeholder="ETH address or ENS of recipient"
+               placeholder="Paste/type the recipient's ETH address" 
                cols="180"
                   >{{ request.form['recipient'] }}</textarea>
         <br>
-        <label for="Subject">Subject</label>
-        <br>
-        <textarea type="text" name="subject"
-               placeholder="Message subject"
-               cols="180"
-                  >{{ request.form['subject'] }}</textarea>
-        <br>
-
         <label for="content">Message</label>
         <br>
         <textarea id="message_content"
                   name="content"
-                  placeholder="Compose your message here. You will sign the message with your MetaMask and encrypt the message with the recipient's public key before sending"
+                  placeholder="Compose your message here. This will be encrypted with the recipient's public key before sending to IPFS and making avaialble for them to retrieve"
                   rows="20"
                   cols="180"
                   >{{ request.form['content'] }}</textarea>
         <br>
-        <!-- signMessage(document.getElementById('message_content').value); -->
-        <!-- type="submit"  -->
-        <button id='test_button' onclick="signMessage();">Sign and Send Message </button>
-        <script type="text/javascript" src="{{ url_for('static', filename='sign_message.js')}}"></script>
-        <!-- <script type="text/javascript" src="{{ url_for('static', filename='encrypt_message.js')}}"></script> -->
+
+        <input type="hidden" name="sender" id="sender_address">{{ request.form['sender'] }}</textarea>
+        <script type="module" >
+            async function checkConnectedWallet() {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+                document.getElementById('sender_address').value = accounts[0] ;
+            }
+            checkConnectedWallet()
+        </script>
+        
+
+        <button type="submit">Encrypt and Send</button>
+                
     </form>
 {% endblock %}

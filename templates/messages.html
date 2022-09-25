@@ -1,24 +1,41 @@
 {% extends 'base.html' %}
+<html>
 
 {% block content %}
-  <h3>{% block title %} {{ heading_message }} {% endblock %}</h3>
-  <table id="message_data" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Recipient Address</th>
-        <th>Message Content</th>
-        <th>Sent At</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for message in messages %}
-        <tr>
-          <td>{{ message['recipient'] }}</td>
-          <td>{{ message['message'] }}</td>
-          <td>{{ message['sent_at'] }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<h4>{% block title %} {{ heading_message }} {% endblock %}</h4>
+{% for message in messages %}
+<div class='message'>
+
+    <p>Sent at: {{ message['message_sent_timestamp'] }}</p>
+    {% if "Sent" in heading_message %}
+    <p>Sent to: {{ message['recipient_address'] }}</p>
+    {% else %}
+    <p>Sent from: {{ message['sender_address'] }}</p>
+    <p>Message Content: **************ENCRYPTED************** </p>
+    <script type="module" src="{{ url_for('static', filename='scripts/message_encrypt_bundled.js')}}"></script>
+    <button onclick="bundledFuncs.decryptData('{{ message['ipfs_cid'] }}');"
+        style="float: right; position: relative; top: -40%"> Fetch and Decrypt</button>
+
+    {% endif %}
+    <p>IPFS cid: {{ message['ipfs_cid'] }}</p>
+
+
+
+</div>
+{% endfor %}
+<div id="overlay"></div>
+<div id="decrypted_message_box" onclick="hidePopup()">
+</div>
+<script>
+    const popup = document.querySelector('decrypted_message_box');
+    function hidePopup() {
+        var overlay = document.getElementById("overlay");
+        var message_box = document.getElementById('decrypted_message_box')
+        message_box.innerText = null
+        overlay.style.display = "none";
+        message_box.style.display = "none";
+    }
+</script>
 {% endblock %}
 
+</html>
