@@ -31376,7 +31376,7 @@ arguments[4][19][0].apply(exports,arguments)
 arguments[4][20][0].apply(exports,arguments)
 },{"../errors":126,"./_stream_duplex":127,"dup":20,"inherits":114}],131:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
-},{"../errors":126,"./_stream_duplex":127,"./internal/streams/destroy":134,"./internal/streams/state":138,"./internal/streams/stream":139,"_process":13,"buffer":7,"dup":21,"inherits":114,"util-deprecate":161}],132:[function(require,module,exports){
+},{"../errors":126,"./_stream_duplex":127,"./internal/streams/destroy":134,"./internal/streams/state":138,"./internal/streams/stream":139,"_process":13,"buffer":7,"dup":21,"inherits":114,"util-deprecate":160}],132:[function(require,module,exports){
 arguments[4][22][0].apply(exports,arguments)
 },{"./end-of-stream":135,"_process":13,"dup":22}],133:[function(require,module,exports){
 arguments[4][23][0].apply(exports,arguments)
@@ -35879,219 +35879,14 @@ nacl.setPRNG = function(fn) {
 })(typeof module !== 'undefined' && module.exports ? module.exports : (self.nacl = self.nacl || {}));
 
 },{"crypto":6}],160:[function(require,module,exports){
-/*! https://mths.be/utf8js v3.0.0 by @mathias */
-;(function(root) {
-
-	var stringFromCharCode = String.fromCharCode;
-
-	// Taken from https://mths.be/punycode
-	function ucs2decode(string) {
-		var output = [];
-		var counter = 0;
-		var length = string.length;
-		var value;
-		var extra;
-		while (counter < length) {
-			value = string.charCodeAt(counter++);
-			if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
-				// high surrogate, and there is a next character
-				extra = string.charCodeAt(counter++);
-				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
-					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
-				} else {
-					// unmatched surrogate; only append this code unit, in case the next
-					// code unit is the high surrogate of a surrogate pair
-					output.push(value);
-					counter--;
-				}
-			} else {
-				output.push(value);
-			}
-		}
-		return output;
-	}
-
-	// Taken from https://mths.be/punycode
-	function ucs2encode(array) {
-		var length = array.length;
-		var index = -1;
-		var value;
-		var output = '';
-		while (++index < length) {
-			value = array[index];
-			if (value > 0xFFFF) {
-				value -= 0x10000;
-				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
-				value = 0xDC00 | value & 0x3FF;
-			}
-			output += stringFromCharCode(value);
-		}
-		return output;
-	}
-
-	function checkScalarValue(codePoint) {
-		if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
-			throw Error(
-				'Lone surrogate U+' + codePoint.toString(16).toUpperCase() +
-				' is not a scalar value'
-			);
-		}
-	}
-	/*--------------------------------------------------------------------------*/
-
-	function createByte(codePoint, shift) {
-		return stringFromCharCode(((codePoint >> shift) & 0x3F) | 0x80);
-	}
-
-	function encodeCodePoint(codePoint) {
-		if ((codePoint & 0xFFFFFF80) == 0) { // 1-byte sequence
-			return stringFromCharCode(codePoint);
-		}
-		var symbol = '';
-		if ((codePoint & 0xFFFFF800) == 0) { // 2-byte sequence
-			symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
-		}
-		else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
-			checkScalarValue(codePoint);
-			symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
-			symbol += createByte(codePoint, 6);
-		}
-		else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
-			symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
-			symbol += createByte(codePoint, 12);
-			symbol += createByte(codePoint, 6);
-		}
-		symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
-		return symbol;
-	}
-
-	function utf8encode(string) {
-		var codePoints = ucs2decode(string);
-		var length = codePoints.length;
-		var index = -1;
-		var codePoint;
-		var byteString = '';
-		while (++index < length) {
-			codePoint = codePoints[index];
-			byteString += encodeCodePoint(codePoint);
-		}
-		return byteString;
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	function readContinuationByte() {
-		if (byteIndex >= byteCount) {
-			throw Error('Invalid byte index');
-		}
-
-		var continuationByte = byteArray[byteIndex] & 0xFF;
-		byteIndex++;
-
-		if ((continuationByte & 0xC0) == 0x80) {
-			return continuationByte & 0x3F;
-		}
-
-		// If we end up here, it’s not a continuation byte
-		throw Error('Invalid continuation byte');
-	}
-
-	function decodeSymbol() {
-		var byte1;
-		var byte2;
-		var byte3;
-		var byte4;
-		var codePoint;
-
-		if (byteIndex > byteCount) {
-			throw Error('Invalid byte index');
-		}
-
-		if (byteIndex == byteCount) {
-			return false;
-		}
-
-		// Read first byte
-		byte1 = byteArray[byteIndex] & 0xFF;
-		byteIndex++;
-
-		// 1-byte sequence (no continuation bytes)
-		if ((byte1 & 0x80) == 0) {
-			return byte1;
-		}
-
-		// 2-byte sequence
-		if ((byte1 & 0xE0) == 0xC0) {
-			byte2 = readContinuationByte();
-			codePoint = ((byte1 & 0x1F) << 6) | byte2;
-			if (codePoint >= 0x80) {
-				return codePoint;
-			} else {
-				throw Error('Invalid continuation byte');
-			}
-		}
-
-		// 3-byte sequence (may include unpaired surrogates)
-		if ((byte1 & 0xF0) == 0xE0) {
-			byte2 = readContinuationByte();
-			byte3 = readContinuationByte();
-			codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
-			if (codePoint >= 0x0800) {
-				checkScalarValue(codePoint);
-				return codePoint;
-			} else {
-				throw Error('Invalid continuation byte');
-			}
-		}
-
-		// 4-byte sequence
-		if ((byte1 & 0xF8) == 0xF0) {
-			byte2 = readContinuationByte();
-			byte3 = readContinuationByte();
-			byte4 = readContinuationByte();
-			codePoint = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0C) |
-				(byte3 << 0x06) | byte4;
-			if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
-				return codePoint;
-			}
-		}
-
-		throw Error('Invalid UTF-8 detected');
-	}
-
-	var byteArray;
-	var byteCount;
-	var byteIndex;
-	function utf8decode(byteString) {
-		byteArray = ucs2decode(byteString);
-		byteCount = byteArray.length;
-		byteIndex = 0;
-		var codePoints = [];
-		var tmp;
-		while ((tmp = decodeSymbol()) !== false) {
-			codePoints.push(tmp);
-		}
-		return ucs2encode(codePoints);
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	root.version = '3.0.0';
-	root.encode = utf8encode;
-	root.decode = utf8decode;
-
-}(typeof exports === 'undefined' ? this.utf8 = {} : exports));
-
-},{}],161:[function(require,module,exports){
 arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],162:[function(require,module,exports){
+},{"dup":31}],161:[function(require,module,exports){
 (function (Buffer){(function (){
 const ethUtil = require('ethereumjs-util');
 const sigUtil = require('@metamask/eth-sig-util');
 const atob = require('atob');
-const utf8 = require('utf8');
 
-async function encryptData(publicKey, message, nonce)  {
+async function encryptData(publicKey, message, nonce) {
 
   console.log("Encrypting your message")
 
@@ -36115,27 +35910,64 @@ async function encryptData(publicKey, message, nonce)  {
 }
 
 
-async function decryptData(data) {
+async function decryptData(cid) {
 
-  console.log("Decrypting your message")
+  console.log("Fetch encrypted message from IPFS")
+  const accounts = await window.ethereum.request({ method: 'eth_accounts' })
 
-  let accounts = await window.ethereum.request({ method: 'eth_accounts' })
+  jQuery.ajax({
+    type: "POST",
+    url: '/fetch_cid_data',
+    contentType: "application/json",
+    data: JSON.stringify({ "ipfs_cid": cid }),
+    dataType: "json",
+    success: function (response) {
+      if (response.success == true) {
+        console.log(response)
+
+        console.log("Decrypting your message")
+
+        let data = response.data
+        decryptMessageWithMM(data, accounts[0])
+
+      }
+      else {
+        alert("Error fetching message from IPFS - please send a message with the IPFS CID of the message you are unable to open, to 0x4541906862a922b1149a408a4e1f197a3a558510 to raise a support ticket with us.");
+        window.location = "/inbox/" + accounts[0];
+      };
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  });
+
+}
+
+async function decryptMessageWithMM(data, account) {
 
   const decrypt = await window.ethereum.request({
     method: 'eth_decrypt',
-    params: [data, accounts[0]],
+    params: [data, account]
   });
 
-  const decryptedMessage = decrypt.replace('b&#39;','').replace('&#39;','')
+  const decryptedMessage = decrypt.replace('b&#39;', '').replace('&#39;', '')
 
-  return atob(decryptedMessage);
+  var overlay = document.getElementById("overlay");
+  var message_box = document.getElementById('decrypted_message_box')
+
+  message_box.innerText = atob(decryptedMessage)
+  overlay.style.display = "block";
+  message_box.style.display = "block";
+
+
+  return true;
 }
 
 module.exports = {
-    'encryptData': encryptData,
-    'decryptData': decryptData
+  'encryptData': encryptData,
+  'decryptData': decryptData
 };
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"@metamask/eth-sig-util":44,"atob":57,"buffer":7,"ethereumjs-util":89,"utf8":160}]},{},[162])(162)
+},{"@metamask/eth-sig-util":44,"atob":57,"buffer":7,"ethereumjs-util":89}]},{},[161])(161)
 });

@@ -1,9 +1,8 @@
 const ethUtil = require('ethereumjs-util');
 const sigUtil = require('@metamask/eth-sig-util');
 const atob = require('atob');
-const utf8 = require('utf8');
 
-async function encryptData(publicKey, message, nonce)  {
+async function encryptData(publicKey, message, nonce) {
 
   console.log("Encrypting your message")
 
@@ -27,23 +26,60 @@ async function encryptData(publicKey, message, nonce)  {
 }
 
 
-async function decryptData(data) {
+async function decryptData(cid) {
 
-  console.log("Decrypting your message")
+  console.log("Fetch encrypted message from IPFS")
+  const accounts = await window.ethereum.request({ method: 'eth_accounts' })
 
-  let accounts = await window.ethereum.request({ method: 'eth_accounts' })
+  jQuery.ajax({
+    type: "POST",
+    url: '/fetch_cid_data',
+    contentType: "application/json",
+    data: JSON.stringify({ "ipfs_cid": cid }),
+    dataType: "json",
+    success: function (response) {
+      if (response.success == true) {
+        console.log(response)
+
+        console.log("Decrypting your message")
+
+        let data = response.data
+        decryptMessageWithMM(data, accounts[0])
+
+      }
+      else {
+        alert("Error fetching message from IPFS - please send a message with the IPFS CID of the message you are unable to open, to 0x4541906862a922b1149a408a4e1f197a3a558510 to raise a support ticket with us.");
+        window.location = "/inbox/" + accounts[0];
+      };
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  });
+
+}
+
+async function decryptMessageWithMM(data, account) {
 
   const decrypt = await window.ethereum.request({
     method: 'eth_decrypt',
-    params: [data, accounts[0]],
+    params: [data, account]
   });
 
-  const decryptedMessage = decrypt.replace('b&#39;','').replace('&#39;','')
+  const decryptedMessage = decrypt.replace('b&#39;', '').replace('&#39;', '')
 
-  return atob(decryptedMessage);
+  var overlay = document.getElementById("overlay");
+  var message_box = document.getElementById('decrypted_message_box')
+
+  message_box.innerText = atob(decryptedMessage)
+  overlay.style.display = "block";
+  message_box.style.display = "block";
+
+
+  return true;
 }
 
 module.exports = {
-    'encryptData': encryptData,
-    'decryptData': decryptData
+  'encryptData': encryptData,
+  'decryptData': decryptData
 };

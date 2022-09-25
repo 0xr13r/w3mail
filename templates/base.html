@@ -6,13 +6,96 @@
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %} - w3mail</title>
     <style>
-        .message {
-            font-size: 0.8em;
+        /* .message {
+            font-size: 0.5em;
             padding: 10px;
             margin: 5px;
             color: #000000;
             background-color: #ffffff
+        } */
+        .message {
+            font-size: 0.6em;
+            margin-left: 10px;
+            height: 80px;
+            display: inline-block;
+            color: #000000;
+            width: 98%;
+            border: 1px solid white;
+            padding: 10px;
+            border-radius: 5px;
+            position: relative;
+            background-color: #fff;
+            border:1px solid #000;
+            vertical-align: middle;
+            line-height: 0.8;
+            align-content: center;
         }
+        .message::before{
+            content:"";
+            position: absolute;
+            top:20px;
+            left:-12px;
+            margin:auto;
+            height: 20px;
+            width: 20px;
+            border:1px solid #fff;
+            transform:rotate(45deg);
+            background-color: #fff;
+            border-bottom:1px solid #000;
+            border-left:1px solid #000;
+        }
+
+        #overlay {
+            display:none; 
+            position:fixed;  
+            left:0px;        
+            top:0px;         
+            width:100%;     
+            height:100%;     
+            background:#000; 
+            opacity:0.5;    
+            z-index:99999;   
+        }
+
+        #decrypted_message_box {
+            font-size: 0.8em;
+            font-family: 'PT Mono';
+            color:#000000;
+            background-color:#000000; 
+            display:none;
+            position:fixed;
+            left:50%;             
+            top:50%;              
+            width:50%;         
+            height:50%;
+            margin-top:-25%;     
+            margin-left:-25%;   
+            float: center;
+            background:#FFFFFF;  
+            border:2px solid #000; 
+            z-index:100000;
+            text-align: center;   
+            vertical-align: middle;
+        }
+
+        /* #close_message_button {
+            display: none;
+            border: 0.1;
+            border-color: #ffffff;
+            padding: 0.5rem 1rem;
+            margin: 0;
+            text-decoration: none;
+            background: #000000;
+            color: #ffffff;
+            font-family: 'PT Mono';
+            font-size: 0.5rem;
+            line-height: 1;
+            cursor: pointer;
+            text-align: center;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        } */
+
 
         nav a {
             color: #ffffff;
@@ -32,7 +115,7 @@
 
         #bannerimage {
             width: 100%;
-            background-image: url("/static/circle_w3mail_icon.png");
+            background-image: url("/static/assets/circle_w3mail_icon.png");
             height: 120px;
             background-color: #000000;
             background-position: left;
@@ -65,6 +148,7 @@
             -webkit-appearance: none;
             -moz-appearance: none;
         }
+
     </style>
 </head>
 
@@ -77,18 +161,18 @@
         </center>
     </div>
 
-    <input type="image" src='/static/MetaMaskLogo.png' id='connectWallet' name="connect_wallet"
+    <input type="image" src='/static/assets/MetaMaskLogo.png' id='connectWallet' name="connect_wallet"
         style="float:right; width:7%; height:7%; position:absolute;top:40px;right:0px;" alt="Connect Wallet"
         onclick="connectWalletwithMetaMask();" />
 
     <nav>
 
-        <script type="text/javascript" src="{{ url_for('static', filename='get_messages.js')}}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='scripts/get_messages.js')}}"></script>
         <button onclick="retrieveMessages('inbox');" class="button">Inbox</button>
         <button onclick="retrieveMessages('outbox');" class="button">Outbox</button>
         <a href="{{ url_for('compose') }}"><button type="button", class="button">Compose</button></a>
         <text id="walletAddress" style="float:right; margin-right: 10px; font-size:0.6em;"></text>
-        <script type="text/javascript" src="{{ url_for('static', filename='wallet_connect.js')}}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='scripts/wallet_connect.js')}}"></script>
        
 
     </nav>

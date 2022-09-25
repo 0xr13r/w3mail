@@ -4,7 +4,6 @@
     "ascii85": "^1.0.2",
     "atob": "^2.1.2",
     "buffer": "^6.0.3",
-    "ethereumjs-util": "^7.1.5",
-    "utf8": "^3.0.0"
+    "ethereumjs-util": "^7.1.5"
   }
 }

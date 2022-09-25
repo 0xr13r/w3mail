@@ -2,11 +2,12 @@ from datetime import datetime, timezone
 import base64
 import logging
 import os
+from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
 from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
 from flask_cors import CORS
 from models import setup_db, db_drop_and_create_all, AddressPublicEncryptionKeys, Messages
-from ipfs_interact import ipfs_upload
+from ipfs_interact import ipfs_upload, ipfs_download
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -48,13 +49,28 @@ def check_for_messages():
         return jsonify(success=True, data=wallet_address)
     else:
         return jsonify(success=False)
+
+@app.route('/fetch_cid_data', methods=['GET','POST'])
+def fetch_cid_data():
+    data = request.get_json()
+    ipfs_cid = data['ipfs_cid']
+    try:
+        encryptedMessage = ipfs_download(ipfs_cid)
+    except Exception as e:
+        logging.error(e)
+        encryptedMessage = None
+
+    if encryptedMessage:
+        return jsonify(success=True, data=encryptedMessage)
+    else:
+        return jsonify(success=False)
     
 
 @app.route('/inbox/<walletAddress>')
 def inbox(walletAddress):
-    messages = Messages.query.filter(Messages.receipient_address == walletAddress).all()
+    messages = Messages.query.filter(Messages.recipient_address == walletAddress).order_by(desc(Messages.message_sent_timestamp)).all()
     if messages:
-        return render_template('messages.html', messages=messages, heading_message="Recieved Messages")
+        return render_template('messages.html', messages=messages, heading_message="Recieved Messages 📥")
     else:
         return render_template('no_messages.html')
 
@@ -62,19 +78,20 @@ def inbox(walletAddress):
 def outbox(walletAddress):
     if request.method == 'POST':
         send_data = request.get_json()
-        if ipfs_upload(
+        successful_upload = ipfs_upload(
             encrypted_message = send_data.get("encryptedMessage"),
             sender = send_data.get("sender"),
             recipient = send_data.get("recipient")
-        ):
+        )
+        if successful_upload:
             return jsonify(success=True)
         else:
             return jsonify(success=False)
         
-    messages = Messages.query.filter(Messages.sender_address == walletAddress).all()
+    messages = Messages.query.filter(Messages.sender_address == walletAddress).order_by(desc(Messages.message_sent_timestamp)).all()
 
     if messages:
-        return render_template('messages.html', messages=messages, heading_message="Sent Messages")
+        return render_template('messages.html', messages=messages, heading_message="Sent Messages 📤")
     else:
         return render_template('no_messages.html')
 

@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<script type="module" src="{{ url_for('static', filename='message_encrypt_bundled.js')}}"></script>
-<script type="module"> bundledFuncs.encryptData('{{ data.recipient_pub_key }}','{{ data.message }}','{{ data.nonce }}') </script>
+<script type="module" src="{{ url_for('static', filename='scripts/message_encrypt_bundled.js')}}"></script>
+<script
+    type="module"> bundledFuncs.encryptData('{{ data.recipient_pub_key }}', '{{ data.message }}', '{{ data.nonce }}') </script>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
 <script type="text/javascript">
-    jQuery.ajax({
-        type: "POST",
-        url: '/outbox/sending',
-        contentType: "application/json",
-        data: JSON.stringify({
-            "encryptedMessage": window.encrypted_message,
-            "sender":'{{ data.sender }}',
-            "recipient": '{{ data.recipient }}'
-        }),
-        dataType: "json",
-        success: function(response) {
-            if (response.success == true) {
-                alert("Message successfully sent");
-                window.location = "/outbox/"+'{{ data.sender }}';
-            } 
-            else {
-                alert("Error sending message - please try again");
-                window.location = "/compose";
-            };
-        },
-        error: function(err) {
-            console.log(err);
-        }
+    $(window).bind("load", function () {
+        jQuery.ajax({
+            type: "POST",
+            url: '/outbox/' + '{{ data.sender }}',
+            contentType: "application/json",
+            data: JSON.stringify({
+                "encryptedMessage": window.encrypted_message,
+                "sender": '{{ data.sender }}',
+                "recipient": '{{ data.recipient }}'
+            }),
+            dataType: "json",
+            success: function (response) {
+                if (response.success == true) {
+                    alert("Message successfully sent");
+                    window.location = "/outbox/" + '{{ data.sender }}';
+                }
+                else {
+                    alert("Error sending message - please try again");
+                    window.location = "/compose";
+                };
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
     });
+
 </script>
-
-
-<!-- <button onclick="bundledFuncs.decryptData(window.encrypted_message)"> Decrypt</button> -->
-
 </html>
