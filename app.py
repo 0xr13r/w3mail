@@ -1,8 +1,10 @@
 from datetime import datetime, timezone
+from itertools import groupby
+from operator import attrgetter
 import base64
 import logging
 import os
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from sqlalchemy.exc import IntegrityError
 from flask import Flask, render_template, request, flash, jsonify
 from flask_cors import CORS
@@ -64,15 +66,36 @@ def fetch_cid_data():
         return jsonify(success=True, data=encryptedMessage)
     else:
         return jsonify(success=False)
-    
 
 @app.route('/inbox/<walletAddress>')
 def inbox(walletAddress):
-    messages = Messages.query.filter(Messages.recipient_address == walletAddress).order_by(desc(Messages.message_sent_timestamp)).all()
-    if messages:
-        return render_template('messages.html', messages=messages, heading_message="Recieved Messages 📥")
-    else:
-        return render_template('no_messages.html')
+    messages = (
+        Messages
+        .query.filter(
+            Messages.recipient_address == walletAddress 
+            and Messages.is_message_read == False
+        )
+        .order_by(
+            desc(Messages.message_sent_timestamp)
+        )
+        .all()
+    )
+
+    return render_template('messages.html', messages=messages, heading_message="received")
+
+# @app.route('/read/<walletAddress>')
+# def read(walletAddress):
+#     if request.method == 'POST':
+#         message_cid = request.get_json()
+#         message = Messages.query.filter(Messages.ipfs_cid==message_cid).first()
+#         message.is_message_read = True
+#         message.message_read_timestamp = datetime.now().replace(tzinfo=timezone.utc)
+
+#     messages = Messages.query.filter(Messages.recipient_address == walletAddress and Messages.is_message_read == True).order_by(desc(Messages.message_sent_timestamp)).all()
+#     if messages:
+#         return render_template('messages.html', messages=messages, heading_message="Recieved w3mails 📥")
+#     else:
+#         return render_template('no_messages.html')
 
 @app.route('/outbox/<walletAddress>',  methods=('GET', 'POST'))
 def outbox(walletAddress):
@@ -88,12 +111,19 @@ def outbox(walletAddress):
         else:
             return jsonify(success=False)
         
-    messages = Messages.query.filter(Messages.sender_address == walletAddress).order_by(desc(Messages.message_sent_timestamp)).all()
+    messages = (
+        Messages
+        .query.filter(
+            Messages.sender_address == walletAddress
+        )
+        .order_by(
+            desc(Messages.message_sent_timestamp)
+        )
+        .all()
+    )
 
-    if messages:
-        return render_template('messages.html', messages=messages, heading_message="Sent Messages 📤")
-    else:
-        return render_template('no_messages.html')
+    return render_template('messages.html', messages=messages, heading_message="sent")
+
 
 @app.route('/compose/', methods=('GET', 'POST'))
 def compose():

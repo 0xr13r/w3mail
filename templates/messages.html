@@ -1,34 +1,105 @@
 {% extends 'base.html' %}
-<html>
 
 {% block content %}
-<h4>{% block title %} {{ heading_message }} {% endblock %}</h4>
-{% for message in messages %}
-<div class='message'>
-
-    <p>Sent at: {{ message['message_sent_timestamp'] }}</p>
-    {% if "Sent" in heading_message %}
-    <p>Sent to: {{ message['recipient_address'] }}</p>
-    {% else %}
-    <p>Sent from: {{ message['sender_address'] }}</p>
-    <p>Message Content: **************ENCRYPTED************** </p>
-    <script type="module" src="{{ url_for('static', filename='scripts/message_encrypt_bundled.js')}}"></script>
-    <button onclick="bundledFuncs.decryptData('{{ message['ipfs_cid'] }}');"
-        style="float: right; position: relative; top: -40%"> Fetch and Decrypt</button>
-
-    {% endif %}
-    <p>IPFS cid: {{ message['ipfs_cid'] }}</p>
-
-
+<div class="container" style="height: 750px;width: 100%;position: relative;vertical-align: middle;">
+    <section class="position-relative py-4 py-xl-5">
+        <div class="container position-relative" style="max-width: 100%;">
+            <div class="row d-flex justify-content-center">
+                <div class="col">
+                    <div class="card"
+                        style="width: 100%;margin-top: -1px;padding-left: 0px;align-self: center;margin-left: -1px;padding-top: 0px;">
+                        <div class="card-body text-center p-sm-5"
+                            style="/*flex: 100 10 auto;*//*-ms-flex: 100 10 auto;*/padding-left: 194px;margin-left: -4px;margin-right: -2px;padding-top: 0px;margin-top: -5px;padding-bottom: 86px;margin-bottom: 0px;">
+                            {% if heading_message == "sent" %}
+                            <h5 class="font-weight-bold mb-3" style="font-family: 'PT Mono'">Sent</h5>
+                            {% else %}
+                            <h5 class="font-weight-bold mb-3" style="font-family: 'PT Mono'">Recieved</h5>
+                            {% endif %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr style="background-color: #ffffff; color: black;">
+                                            {% if heading_message == "sent" %}
+                                            <th style="font-family: 'PT Mono'; text-align: left;font-size: 0.7em;">To
+                                            </th>
+                                            {% else %}
+                                            <th style="font-family: 'PT Mono';text-align: left;font-size: 0.7em;">From
+                                            </th>
+                                            {% endif %}
+                                            <th style="font-family: 'PT Mono';text-align: left;font-size: 0.7em;">IPFS
+                                                CID</th>
+                                            {% if heading_message == "sent" %}
+                                            <th
+                                                style="font-family: 'PT Mono';width: 10%;text-align: left;font-size: 0.7em;">
+                                                Sent At</th>
+                                            {% else %}
+                                            <th
+                                                style="font-family: 'PT Mono';width: 10%;text-align: left;font-size: 0.7em;">
+                                                Received At</th>
+                                            <th
+                                                style="font-family: 'PT Mono';text-align: right;width: 3%;font-size: 0.7em;">
+                                                View</th>
+                                            {% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if not messages %}
+                                        <text style="font-family: 'PT Mono';text-align: left;font-size: 0.7em;">No
+                                            messages to show</text>
+                                        {% else %}
+                                        {% for message in messages %}
+                                        <tr onclick="bundledFuncs.decryptData('{{ message['ipfs_cid'] }}');">
+                                            {% if heading_message == "sent" %}
+                                            <td
+                                                style="font-family: 'PT Mono';  width: 10%;text-align: left;font-size: 0.7em;">
+                                                {{
+                                                message['recipient_address'] }}</td>
+                                            {% else %}
+                                            <td
+                                                style="font-family: 'PT Mono'; width: 10%;text-align: left;font-size: 0.7em;">
+                                                {{
+                                                message['sender_address'] }}</td>
+                                            {% endif %}
+                                            <td
+                                                style="font-family: 'PT Mono'; width: 10%;text-align: left;font-size: 0.7em;">
+                                                {{ message['ipfs_cid'] }}
+                                            </td>
+                                            <td
+                                                style="font-family: 'PT Mono';  width: 10%;text-align: left;font-size: 0.7em;">
+                                                {{
+                                                message['message_sent_timestamp'].strftime("%h %e %I:%M %p") }}</td>
+                                            {% if heading_message != "sent" %}
+                                            <td
+                                                style="font-family: 'PT Mono';text-align: right;width: 3%;font-size: 0.7em;">
+                                                <a class="viewable">
+                                                    <i id="not-viewable-icon" class="far fa-eye-slash" style="color:black; float: right;"></i>
+                                                    <i id="viewable-icon" class="far fa-eye" style="color:white; float: right;"></i>
+                                                </a>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                            </div>
+                            {% endfor %}
+                            </tbody>
+                            {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</section>
 
 </div>
-{% endfor %}
+
+<script type="module" src="{{ url_for('static', filename='scripts/message_encrypt_bundled.js')}}"></script>
+
 <div id="overlay"></div>
-<div id="decrypted_message_box" onclick="hidePopup()">
-</div>
+<div id="decrypted_message_box" onclick="hideMessage()"></div>
 <script>
     const popup = document.querySelector('decrypted_message_box');
-    function hidePopup() {
+    function hideMessage() {
         var overlay = document.getElementById("overlay");
         var message_box = document.getElementById('decrypted_message_box')
         message_box.innerText = null
@@ -37,5 +108,3 @@
     }
 </script>
 {% endblock %}
-
-</html>

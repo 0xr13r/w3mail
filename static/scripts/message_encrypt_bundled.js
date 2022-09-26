@@ -35915,6 +35915,8 @@ async function decryptData(cid) {
   console.log("Fetch encrypted message from IPFS")
   const accounts = await window.ethereum.request({ method: 'eth_accounts' })
 
+  console.log(cid);
+
   jQuery.ajax({
     type: "POST",
     url: '/fetch_cid_data',
@@ -35923,7 +35925,6 @@ async function decryptData(cid) {
     dataType: "json",
     success: function (response) {
       if (response.success == true) {
-        console.log(response)
 
         console.log("Decrypting your message")
 
