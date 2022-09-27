@@ -48,13 +48,20 @@
                                             messages to show</text>
                                         {% else %}
                                         {% for message in messages %}
-                                        <tr onclick="bundledFuncs.decryptData('{{ message['ipfs_cid'] }}');">
+
+                                        {% if heading_message == "sent" %}
+                                        <tr class="tr_not_clickable">
+                                            {% else %}
+                                        <tr class="tr_clickable"
+                                            onclick="bundledFuncs.decryptData('{{ message['ipfs_cid'] }}');">
+                                            {% endif %}
                                             {% if heading_message == "sent" %}
                                             <td
                                                 style="font-family: 'PT Mono';  width: 10%;text-align: left;font-size: 0.7em;">
                                                 {{
                                                 message['recipient_address'] }}</td>
                                             {% else %}
+
                                             <td
                                                 style="font-family: 'PT Mono'; width: 10%;text-align: left;font-size: 0.7em;">
                                                 {{
@@ -72,8 +79,10 @@
                                             <td
                                                 style="font-family: 'PT Mono';text-align: right;width: 3%;font-size: 0.7em;">
                                                 <a class="viewable">
-                                                    <i id="not-viewable-icon" class="far fa-eye-slash" style="color:black; float: right;"></i>
-                                                    <i id="viewable-icon" class="far fa-eye" style="color:white; float: right;"></i>
+                                                    <i id="not-viewable-icon" class="far fa-eye-slash"
+                                                        style="color:black; float: right;"></i>
+                                                    <i id="viewable-icon" class="far fa-eye"
+                                                        style="color:white; float: right;"></i>
                                                 </a>
                                             </td>
                                             {% endif %}
@@ -96,15 +105,27 @@
 <script type="module" src="{{ url_for('static', filename='scripts/message_encrypt_bundled.js')}}"></script>
 
 <div id="overlay"></div>
-<div id="decrypted_message_box" onclick="hideMessage()"></div>
+<center>
+<div id="decryptedMessageBox" class="modal fade show" role="dialog" tabindex="-1" style="height: 750px;width: 100%;position: fixed;">
+    <div class="modal-dialog" role="document" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <text id="messageFrom" class="modal-title" style="font-family: 'PT Mono'; text-align: left;  font-size: 0.7em;"></text><button class="close" type="button" data-dismiss="modal" aria-label="Close" onclick="hideMessage();"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body" id="messageContent" style="font-family: 'PT Mono'; text-align: left; font-size: 0.7em;">
+            </div>
+            <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal"  onclick="hideMessage();">Close</button></div>
+        </div>
+    </div>
+</div>
+</center>
+
 <script>
-    const popup = document.querySelector('decrypted_message_box');
     function hideMessage() {
         var overlay = document.getElementById("overlay");
-        var message_box = document.getElementById('decrypted_message_box')
+        var message_box = document.getElementById('messageContent')
         message_box.innerText = null
         overlay.style.display = "none";
-        message_box.style.display = "none";
     }
 </script>
 {% endblock %}

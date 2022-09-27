@@ -64,19 +64,20 @@ async function decryptMessageWithMM(data, account) {
 
   const decrypt = await window.ethereum.request({
     method: 'eth_decrypt',
-    params: [data, account]
+    params: [data.encrypted_message_hex, account]
   });
 
   if (decrypt) {
     const decryptedMessage = decrypt.replace('b&#39;', '').replace('&#39;', '')
 
     var overlay = document.getElementById("overlay");
-    var message_box = document.getElementById('decrypted_message_box')
+    var message_box = document.getElementById("messageContent");
+    var message_from = document.getElementById("messageFrom");
 
+    message_from.innerText =  "From: "+ data.sender_address + "\nSent At:" +data.message_sent_timestamp
     message_box.innerText = atob(decryptedMessage)
+    $('#decryptedMessageBox').modal('show');
     overlay.style.display = "block";
-    message_box.style.display = "block";
-
 
     return true;
   }

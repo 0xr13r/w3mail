@@ -43,7 +43,7 @@ async function connectWalletwithMetaMask() {
     console.log(accounts)
 
     window.userWalletAddress = accounts[0]
-    walletAddress.innerHTML = "You are signed in with: " + window.userWalletAddress
+    walletAddress.innerHTML = window.userWalletAddress
 
     storePublicKeyForMessageEncryption()
     return

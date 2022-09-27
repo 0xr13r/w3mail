@@ -4,12 +4,13 @@ from operator import attrgetter
 import base64
 import logging
 import os
-from sqlalchemy import desc, func
+from sqlalchemy import desc, inspect
 from sqlalchemy.exc import IntegrityError
 from flask import Flask, render_template, request, flash, jsonify
 from flask_cors import CORS
 from models import setup_db, db_drop_and_create_all, AddressPublicEncryptionKeys, Messages
 from ipfs_interact import ipfs_upload, ipfs_download
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -52,6 +53,11 @@ def check_for_messages():
     else:
         return jsonify(success=False)
 
+
+def object_as_dict(obj):
+    return {c.key: getattr(obj, c.key)
+            for c in inspect(obj).mapper.column_attrs}
+
 @app.route('/fetch_cid_data', methods=['GET','POST'])
 def fetch_cid_data():
     data = request.get_json()
@@ -62,8 +68,14 @@ def fetch_cid_data():
         logging.error(e)
         encryptedMessage = None
 
+    message_metadata = Messages.query.filter(Messages.ipfs_cid == ipfs_cid).first()
+    
+    message_metadata_dict = object_as_dict(message_metadata)
+    message_metadata_dict['message_sent_timestamp'] = message_metadata_dict['message_sent_timestamp'].strftime("%h %e %I:%M %p")
+    message_metadata_dict['encrypted_message_hex'] = encryptedMessage
+
     if encryptedMessage:
-        return jsonify(success=True, data=encryptedMessage)
+        return jsonify(success=True, data=message_metadata_dict)
     else:
         return jsonify(success=False)
 
