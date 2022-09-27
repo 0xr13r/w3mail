@@ -94,6 +94,9 @@
 .sidebar.collapsed {
     width: 0 !important
 }
+.sidebar.collapsed .nav-item i {
+    color:white
+}
 
 @media (max-width:991px) {
     .sidebar.mobile-hid .nav-item {
