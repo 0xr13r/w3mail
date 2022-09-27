@@ -94,7 +94,7 @@ body {
     max-width: 14rem !important;
     width: 100%;
     min-height: 100vh;
-    background-color: #ffa403;
+    background-color: #3f7f9a;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -131,7 +131,7 @@ body {
     top: unset !important;
     left: unset !important;
     min-width: unset !important;
-    background-color: #ffa403;
+    background-color: #3f7f9a;
     border-radius: 0 !important
 }
 
