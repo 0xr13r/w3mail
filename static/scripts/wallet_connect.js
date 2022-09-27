@@ -1,11 +1,17 @@
 window.userWalletAddress = null
 const connectWallet = document.getElementById('connectWallet')
 const walletAddress = document.getElementById('walletAddress')
-const connectToMetaMask = document.getElementById('connectToMM')
+const connectToMetaMask = document.getElementById('connect_content')
+const connectModalButton = document.getElementById('connectModalButton')
 
 function checkInstalled() {
     if (typeof window.ethereum == 'undefined') {
-        connectToMetaMask.innerText = "Welcome to w3mail, MetaMask is not installed. Please install it to proceed."
+        console.log('Metamask not installed')
+        connectToMetaMask.innerText = "MetaMask is not installed in this browser. Please install it to proceed 🦊."
+        connectModalButton.innerText = "Install Metask"
+        $("#connectModalButton").css("display", "none")
+        $("#installMetaMask").css("display", "inline-block")
+        $('#connectedModal').modal({backdrop: 'static', keyboard: false},'show');
         connectToMetaMask.classList.remove()
         connectToMetaMask.classList.add()
         return false;
@@ -87,8 +93,10 @@ async function checkConnectedWallet() {
     let accounts = await window.ethereum.request({ method: 'eth_accounts' })
 
     if ( accounts.length === 0 ){
-        console.log("No wallet connected")
-        connectToMetaMask.innerText = "Welcome to w3mail! Please connect to MetaMask to begin 🦊."
+        console.log("MetaMask installed but no wallet is connected")
+        connectToMetaMask.innerText = "Please connect to MetaMask to begin 🦊."
+        $("#installMetaMask").css("display", "none")
+        $('#connectedModal').modal({backdrop: 'static', keyboard: false},'show');
         return;
     }
 

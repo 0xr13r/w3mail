@@ -13,27 +13,26 @@
     <link rel="stylesheet" href="/static/assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="/static/assets/css/styles.min.css">
     <style>
-
         #overlay {
-            display:none; 
-            position:fixed;  
-            left:0px;       
-            top:-50px; 
-            width:100%;     
-            height:110%;     
-            background:#000; 
-            opacity:0.8;    
-            z-index:99999;   
+            display: none;
+            position: fixed;
+            left: 0px;
+            top: -50px;
+            width: 100%;
+            height: 110%;
+            background: #000;
+            opacity: 0.8;
+            z-index: 99999;
         }
 
         .tr_clickable:hover td {
-            background-color: #000000;
-            color: #ffffff 
+            background-color: #343a40;
+            color: #ffffff
         }
 
 
         .tr_clickable:active td {
-            background-color: #3f7f9a;
+            background-color: #dee3e6;
             color: #ffffff;
         }
 
@@ -48,21 +47,25 @@
         }
 
         #walletAddress {
-            width: 100px;
             overflow: hidden;
             white-space: nowrap;
-            text-overflow: ellipsis;
-            color: black;
+            text-overflow: none;
+            color: #343a40;
+            width: 2ch;
+            font-size: 1.5em;
+            font-weight: bold;
         }
 
-        #walletAddress:hover{
+        #walletAddress:hover {
             overflow: visible;
+            direction: rtl;
             white-space: normal;
             width: max-content;
             position: absolute;
             background-color: transparent;
             color: #ffffff;
             z-index: 100000;
+            font-size: 1em;
         }
 
 
@@ -75,29 +78,50 @@
             margin-top: 20px;
         }
 
+        #image_container {
+            height: 7%;
+            position: fixed;
+            top: 0;
+            right: 0;
+            margin-top: 10px;
+            margin-right: 10px;
+            background-image: url("/static/assets/img/account_profile_circle.png");
+            background-size: cover;
+        }
+
+        body {
+            background: hsla(172, 85%, 74%, 1);
+            background: linear-gradient(45deg, hsla(172, 85%, 74%, 1) 0%, hsla(225, 60%, 67%, 1) 42%, hsla(319, 74%, 64%, 1) 100%);
+            background: -moz-linear-gradient(45deg, hsla(172, 85%, 74%, 1) 0%, hsla(225, 60%, 67%, 1) 42%, hsla(319, 74%, 64%, 1) 100%);
+            background: -webkit-linear-gradient(45deg, hsla(172, 85%, 74%, 1) 0%, hsla(225, 60%, 67%, 1) 42%, hsla(319, 74%, 64%, 1) 100%);
+            filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#83f5e5", endColorstr="#7A93DE", GradientType=1);
+            background-repeat:no-repeat;
+            width:100%;
+            min-height: 100vh;
+        }
     </style>
 </head>
 
-<body style="background-color: black;">
-    <ul class="nav flex-column shadow d-flex sidebar mobile-hid" style="margin-bottom:-100px">
+<body>
+    <ul class="nav flex-column shadow d-flex sidebar mobile-hid" style="min-height: 100vh; display: none;">
         <li class="nav-item logo-holder" style="padding-bottom: 10px;">
-            <div class="text-center text-white logo py-4 mx-4" style="margin-bottom: 20px;margin-top: 22px;"><a
-                    class="text-white text-decoration-none" id="title" href="/"
+            <div class="text-center text-dark logo py-4 mx-4" style="margin-bottom: 20px;margin-top: -3px;"><a
+                    class="text-dark text-decoration-none" id="title" href="/"
                     style="float: left;margin-top: -4%;font-family: 'PT Mono';"><strong>w3mail</strong><br></a><i
-                    class="fas fa-caret-right" id="sidebarToggle" style="float: right;"></i><a
-                    class="text-white float-right" id="sidebarToggleHolder" href="#"></a></div>
+                    class="fas fa-bars" id="sidebarToggle" style="float: right;"></i><a
+                    class="text-dark float-right" id="sidebarToggleHolder" href="/"></a></div>
         </li>
         <li class="nav-item" onclick="connectWalletwithMetaMask();"><a
-                class="nav-link text-left text-white py-1 px-0"><i class="fas fa-sign-in-alt mx-3"></i><span
+                class="nav-link text-left text-dark py-1 px-0" style="color:#343a40"><i class="fas fa-sign-in-alt mx-3"></i><span
                     class="text-nowrap mx-2" style="font-family: 'PT Mono';">Connect Wallet</span></a></li>
-        <li class="nav-item"><a class="nav-link text-left text-white py-1 px-0" href="{{ url_for('compose') }}"><svg
+        <li class="nav-item"><a class="nav-link text-left text-dark py-1 px-0" href="{{ url_for('compose') }}"><svg
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em"
                     fill="currentColor" class="mx-3">
                     <path
                         d="M421.7 220.3L188.5 453.4L154.6 419.5L158.1 416H112C103.2 416 96 408.8 96 400V353.9L92.51 357.4C87.78 362.2 84.31 368 82.42 374.4L59.44 452.6L137.6 429.6C143.1 427.7 149.8 424.2 154.6 419.5L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3zM492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75z">
                     </path>
                 </svg><span class="text-nowrap mx-2" style="font-family: 'PT Mono';">Compose</span></a></li>
-        <li class="nav-item" onclick="retrieveMessages('inbox');"><a class="nav-link text-left text-white py-1 px-0"
+        <li class="nav-item" onclick="retrieveMessages('inbox');"><a class="nav-link text-left text-dark py-1 px-0"
                 style="font-family: 'PT Mono';"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
                     width="1em" height="1em" fill="currentColor" class="mx-3">
                     <path
@@ -105,7 +129,7 @@
                     </path>
                 </svg><span class="text-nowrap mx-2" style="font-family: 'PT Mono';">Inbox</span></a></li>
         <li class="nav-item" onclick="retrieveMessages('outbox');"><a
-                class="nav-link text-left text-white py-1 px-0"><svg xmlns="http://www.w3.org/2000/svg"
+                class="nav-link text-left text-dark py-1 px-0"><svg xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" class="mx-3">
                     <path
                         d="M0 128C0 92.65 28.65 64 64 64H448C483.3 64 512 92.65 512 128V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V128zM48 128V150.1L220.5 291.7C241.1 308.7 270.9 308.7 291.5 291.7L464 150.1V127.1C464 119.2 456.8 111.1 448 111.1H64C55.16 111.1 48 119.2 48 127.1L48 128zM48 212.2V384C48 392.8 55.16 400 64 400H448C456.8 400 464 392.8 464 384V212.2L322 328.8C283.6 360.3 228.4 360.3 189.1 328.8L48 212.2z">
@@ -113,44 +137,54 @@
                 </svg><span class="text-nowrap mx-2" style="font-family: 'PT Mono';">Outbox</span></a></li>
         <li class="nav-item"></li>
         <li class="nav-item dropdown"><a
-                class="dropdown-toggle nav-link text-left text-white py-1 px-0 position-relative" aria-expanded="false"
+                class="dropdown-toggle nav-link text-left text-dark py-1 px-0 position-relative" aria-expanded="false"
                 data-toggle="dropdown" href="#"><i class="fas fa-sliders-h mx-3"></i><span class="text-nowrap mx-2"
                     style="font-family: 'PT Mono';">Config</span><i
                     class="fas fa-caret-down float-none float-lg-right fa-sm"></i></a>
-            <div class="dropdown-menu border-0 animated fadeIn"><a class="dropdown-item text-white" href="#"><span
-                        style="font-family: 'PT Mono';">Address Book</span></a><a class="dropdown-item text-white"
+            <div class="dropdown-menu border-0 animated fadeIn"><a class="dropdown-item text-dark" href="#"><span
+                        style="font-family: 'PT Mono';">Address Book</span></a><a class="dropdown-item text-dark"
                     href="#"><span style="font-family: 'PT Mono';">Address Whitelist</span></a></div>
         </li>
-        
-        <li class="nav-item"><a class="nav-link text-left text-white py-1 px-0" href="#"><i
+
+        <li class="nav-item"><a class="nav-link text-left text-dark py-1 px-0" href="#"><i
                     class="fas fa-sign-out-alt mx-3"></i><i class="fa fa-caret-right d-none position-absolute"></i><span
                     class="text-nowrap mx-2" style="font-family: 'PT Mono';">Log out</span></a></li>
 
-        <li class="nav-item" onclick="connectWalletwithMetaMask();"><a class="nav-link text-left text-white py-1 px-0"
-                style="background-color: #3f7f9a; bottom: 0; margin-left: 15px; position: fixed; margin-bottom: 5px;"><svg
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em"
-                    fill="currentColor" style="color: #000000;margin-bottom: 5px;font-size: 40px;">
-                    <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
-                    <path
-                        d="M448 32C465.7 32 480 46.33 480 64C480 81.67 465.7 96 448 96H80C71.16 96 64 103.2 64 112C64 120.8 71.16 128 80 128H448C483.3 128 512 156.7 512 192V416C512 451.3 483.3 480 448 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H448zM416 336C433.7 336 448 321.7 448 304C448 286.3 433.7 272 416 272C398.3 272 384 286.3 384 304C384 321.7 398.3 336 416 336z">
-                    </path>
-                </svg>
-            </a></li>
-
-        <!-- <img src="static/assets/img/w3mail.png" style="width:50%; position: relative;"> -->
-
-        <h4 id="walletAddress" class="wrap_truncate"
-            style="font-family: 'PT Mono'; bottom: 0; margin-left: 85px; position: fixed; margin-bottom:30px;">
-        </h4>
-        <div id="overlay"></div>
-       
-
     </ul>
-    
+
     <div class="content">
-        <div id="overlay"></div>
+        <div id="image_container">
+            <div id="walletAddress" class="wrap_truncate"
+                style="font-family: 'PT Mono'; color:#ffffff; height: 7%;position: fixed;top: 0;right: 0; margin-top: 15px; margin-right: 20px;"
+                onclick="connectWalletwithMetaMask()">
+            </div>
+        </div>
+        <center>
+            <div id="connectedModal" class="modal fade show" role="dialog" tabindex="-1"
+                style="top: 25% ; height: 100%; width: 100%; position: fixed;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="welcome_message" class="modal-title"
+                                style="font-family: 'PT Mono'; text-align: left;">Welcome to w3mail</h5>
+                        </div>
+                        <div class="modal-body" id="connect_content"
+                            style="font-family: 'PT Mono'; text-align: left; font-size: 1em;">
+                        </div>
+                        <div class="modal-footer"><button id="connectModalButton" class="btn btn-light" type="button" data-dismiss="modal"
+                                onclick="connectWalletwithMetaMask();"
+                                style="font-family: 'PT Mono'; text-align: center; font-size: 0.7em; background-color: #343a40; color:#ffffff;">Connect to
+                                MetaMask</button><a id="installMetaMask" href="https://metamask.io/download/" style="font-family: 'PT Mono'; color:#343a40">Go to MetaMask</a></div>
+                    </div>
+                </div>
+            </div>
+        </center>
+
+
         {% block content %} {% endblock %}
     </div>
+
+
 
     <script src="{{ url_for('static', filename='assets/js/jquery.min.js')}}"></script>
     <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
