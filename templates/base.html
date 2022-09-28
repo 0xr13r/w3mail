@@ -103,7 +103,7 @@
             right: 0;
             margin-top: 20px;
             margin-right: 20px;
-            z-index:100000;
+            z-index: 100000;
         }
 
         .btn-profile {
@@ -118,13 +118,15 @@
             text-decoration: none;
             font-family: 'PT Mono';
             font-size: 0.6em;
-            color:#343a40;
-            border-radius: 45px;
+            color: #343a40;
+            border-radius: 5px;
             -webkit-transition: width 0.2s;
             transition: width 0.2s;
         }
+
         .btn-profile:hover {
             background-color: #343a40;
+            color: white
         }
 
         .btn-profile .btn-profile-text {
@@ -161,8 +163,8 @@
         }
 
         .image-holder {
-            position:absolute;
-            left: 45%; 
+            position: absolute;
+            left: 45%;
             top: 45%;
             width: 150px;
             height: 150px;
@@ -231,8 +233,9 @@
 
 
         <div id="image_container">
-            <button class="btn-profile"  onclick="connectWalletwithMetaMask()">
-                <span class="btn-profile-icon"><i class="fas fa-wallet" aria-hidden="true" style="padding-left: 5px;"></i></span>
+            <button class="btn-profile" onclick="connectWalletwithMetaMask()">
+                <span class="btn-profile-icon"><i class="fas fa-wallet" aria-hidden="true"
+                        style="padding-left: 5px;"></i></span>
                 <span id="walletAddress" class="btn-profile-text"></span>
             </button>
 
@@ -259,6 +262,9 @@
                 </div>
             </div>
         </center>
+
+        <button class="btn-profile" type="button"
+            style="left: 20px;bottom: 20px;position: fixed; background-color: white; color:#343a40; font-family: 'PT Mono'; font-size: 1em;" onclick="location.href='{{url_for('compose')}}'">Compose</button>
 
 
         {% block content %} {% endblock %}
