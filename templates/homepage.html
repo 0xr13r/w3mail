@@ -1,54 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <link href='https://fonts.googleapis.com/css?family=PT Mono' rel='stylesheet'>
-<head>
-  <style>
-    body {
-      color: #ffffff;
-      background-color: #000000;
-      font-family: 'PT Mono';font-size: 16px;
-      
-    }
-
-    .centerContent {
-      margin: 0;
-      position: absolute;
-      top: 45%;
-      left: 50%;
-      -ms-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-    }
-
-    .centerButton {
-      margin: 0;
-      position: absolute;
-      top: 65%;
-      left: 50%;
-      -ms-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-    }
-  </style>
-</head>
-
-<body>
-
-  <center>
-  <text id='walletAddress' style="text-align:center;"></text>
-  </center>
-
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-  <div class="centerContent">
-    <img src="/static/assets/circle_w3mail.png" width="200" alt="w3mail-logo" style="float:center;">
-  </div>
-
-  <input class="centerButton" type="image" src='/static/assets/Homepage button.png' id='connectWallet' name="connect_wallet"
-    style="height:10%; width: 20%;" alt="Connect Wallet" onclick="connectWalletwithMetaMask();" />
-    
-  <script type="text/javascript" src="{{ url_for('static', filename='scripts/wallet_connect.js')}}"></script>
+{% extends 'base.html' %}
 
 
+{% block content %}
 
-</body>
+<div class="container" style="height: 750px;width: 100%;position: relative;vertical-align: middle;">
+    <h4 id="connectToMM"
+        style=" text-align:center; font-family: 'PT Mono'; font-size:0.8em; color:#ffffff;margin: 0;position: absolute;top: 5%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%)">
+    </h4>
+    <img src="static/assets/img/w3mail-banner-transparent.png" width="50%"
+        style="margin: 0;position: absolute;top: 50%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);">
 
-</html>
+
+    <div class="typewriter" style="width:max-content; margin: 0;position: absolute;top: 75%;left: 50%;-ms-transform: translate(-50%, -50%);transform: translate(-50%, -50%);">
+        <h4>Don't just say hello to simple and secure web3 messaging. Do it with w3mail.</h4>
+    </div>
+
+
+</div>
+
+{% endblock %}

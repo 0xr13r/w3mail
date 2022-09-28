@@ -1,13 +1,16 @@
 from datetime import datetime, timezone
+from itertools import groupby
+from operator import attrgetter
 import base64
 import logging
 import os
-from sqlalchemy import desc
+from sqlalchemy import desc, inspect, func
 from sqlalchemy.exc import IntegrityError
 from flask import Flask, render_template, request, flash, jsonify
 from flask_cors import CORS
 from models import setup_db, db_drop_and_create_all, AddressPublicEncryptionKeys, Messages
 from ipfs_interact import ipfs_upload, ipfs_download
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -50,6 +53,11 @@ def check_for_messages():
     else:
         return jsonify(success=False)
 
+
+def object_as_dict(obj):
+    return {c.key: getattr(obj, c.key)
+            for c in inspect(obj).mapper.column_attrs}
+
 @app.route('/fetch_cid_data', methods=['GET','POST'])
 def fetch_cid_data():
     data = request.get_json()
@@ -60,19 +68,46 @@ def fetch_cid_data():
         logging.error(e)
         encryptedMessage = None
 
+    message_metadata = Messages.query.filter(Messages.ipfs_cid == ipfs_cid).first()
+    
+    message_metadata_dict = object_as_dict(message_metadata)
+    message_metadata_dict['message_sent_timestamp'] = message_metadata_dict['message_sent_timestamp'].strftime("%h %e %I:%M %p")
+    message_metadata_dict['encrypted_message_hex'] = encryptedMessage
+
     if encryptedMessage:
-        return jsonify(success=True, data=encryptedMessage)
+        return jsonify(success=True, data=message_metadata_dict)
     else:
         return jsonify(success=False)
-    
 
 @app.route('/inbox/<walletAddress>')
 def inbox(walletAddress):
-    messages = Messages.query.filter(Messages.recipient_address == walletAddress).order_by(desc(Messages.message_sent_timestamp)).all()
-    if messages:
-        return render_template('messages.html', messages=messages, heading_message="Recieved Messages 📥")
-    else:
-        return render_template('no_messages.html')
+    messages = (
+        Messages
+        .query.filter(
+            Messages.recipient_address == walletAddress 
+            and Messages.is_message_read == False
+        )
+        .order_by(
+            desc(Messages.message_sent_timestamp)
+        )
+        .all()
+    )
+
+    return render_template('messages.html', messages=messages, heading_message="received")
+
+# @app.route('/read/<walletAddress>')
+# def read(walletAddress):
+#     if request.method == 'POST':
+#         message_cid = request.get_json()
+#         message = Messages.query.filter(Messages.ipfs_cid==message_cid).first()
+#         message.is_message_read = True
+#         message.message_read_timestamp = datetime.now().replace(tzinfo=timezone.utc)
+
+#     messages = Messages.query.filter(Messages.recipient_address == walletAddress and Messages.is_message_read == True).order_by(desc(Messages.message_sent_timestamp)).all()
+#     if messages:
+#         return render_template('messages.html', messages=messages, heading_message="Recieved w3mails 📥")
+#     else:
+#         return render_template('no_messages.html')
 
 @app.route('/outbox/<walletAddress>',  methods=('GET', 'POST'))
 def outbox(walletAddress):
@@ -88,22 +123,29 @@ def outbox(walletAddress):
         else:
             return jsonify(success=False)
         
-    messages = Messages.query.filter(Messages.sender_address == walletAddress).order_by(desc(Messages.message_sent_timestamp)).all()
+    messages = (
+        Messages
+        .query.filter(
+            Messages.sender_address == walletAddress
+        )
+        .order_by(
+            desc(Messages.message_sent_timestamp)
+        )
+        .all()
+    )
 
-    if messages:
-        return render_template('messages.html', messages=messages, heading_message="Sent Messages 📤")
-    else:
-        return render_template('no_messages.html')
+    return render_template('messages.html', messages=messages, heading_message="sent")
+
 
 @app.route('/compose/', methods=('GET', 'POST'))
 def compose():
     if request.method == 'POST':
-        sender=request.form['sender']
-        recipient = request.form['recipient']
+        sender=str(request.form['sender'])
+        recipient = str(request.form['recipient'])
         message_content = request.form['content']
         message_sent_at = datetime.now().replace(tzinfo=timezone.utc)
-
-        recipient_public_encryption_key = AddressPublicEncryptionKeys.query.filter(AddressPublicEncryptionKeys.wallet_address == recipient).first()
+        
+        recipient_public_encryption_key = AddressPublicEncryptionKeys.query.filter(func.upper(AddressPublicEncryptionKeys.wallet_address) == recipient.upper()).first()
         
         if not recipient_public_encryption_key:
             logging.error("Since the recipient is currently not using w3mail we don't have their public encryption key. You cannot send a message at this time")

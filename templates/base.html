@@ -1,190 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
-<link href='https://fonts.googleapis.com/css?family=PT Mono' rel='stylesheet'>
 
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %} {% endblock %} - w3mail</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>w3mail</title>
+    <link rel="stylesheet" href="/static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Mono&amp;display=swap">
+    <link rel="stylesheet" href="/static/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/static/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/static/assets/css/styles.min.css">
     <style>
-        /* .message {
-            font-size: 0.5em;
-            padding: 10px;
-            margin: 5px;
-            color: #000000;
-            background-color: #ffffff
-        } */
-        .message {
-            font-size: 0.6em;
-            margin-left: 10px;
-            height: 80px;
-            display: inline-block;
-            color: #000000;
-            width: 98%;
-            border: 1px solid white;
-            padding: 10px;
-            border-radius: 5px;
-            position: relative;
-            background-color: #fff;
-            border:1px solid #000;
-            vertical-align: middle;
-            line-height: 0.8;
-            align-content: center;
-        }
-        .message::before{
-            content:"";
-            position: absolute;
-            top:20px;
-            left:-12px;
-            margin:auto;
-            height: 20px;
-            width: 20px;
-            border:1px solid #fff;
-            transform:rotate(45deg);
-            background-color: #fff;
-            border-bottom:1px solid #000;
-            border-left:1px solid #000;
+        .tr_clickable:hover td {
+            background-color: #343a40;
+            color: #ffffff
         }
 
-        #overlay {
-            display:none; 
-            position:fixed;  
-            left:0px;        
-            top:0px;         
-            width:100%;     
-            height:100%;     
-            background:#000; 
-            opacity:0.5;    
-            z-index:99999;   
+
+        .tr_clickable:active td {
+            background-color: #dee3e6;
+            color: #ffffff;
         }
 
-        #decrypted_message_box {
-            font-size: 0.8em;
-            font-family: 'PT Mono';
-            color:#000000;
-            background-color:#000000; 
-            display:none;
-            position:fixed;
-            left:50%;             
-            top:50%;              
-            width:50%;         
-            height:50%;
-            margin-top:-25%;     
-            margin-left:-25%;   
-            float: center;
-            background:#FFFFFF;  
-            border:2px solid #000; 
-            z-index:100000;
-            text-align: center;   
-            vertical-align: middle;
+        .tr_clickable:hover td a i {
+            display: inline;
+            color: white
         }
 
-        /* #close_message_button {
+        .tr_clickable:active td a i {
             display: none;
-            border: 0.1;
-            border-color: #ffffff;
-            padding: 0.5rem 1rem;
-            margin: 0;
-            text-decoration: none;
-            background: #000000;
-            color: #ffffff;
-            font-family: 'PT Mono';
-            font-size: 0.5rem;
-            line-height: 1;
-            cursor: pointer;
-            text-align: center;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-        } */
-
-
-        nav a {
-            color: #ffffff;
-            font-size: 1em;
-            margin-left: 1px;
-            margin-right: 20px;
-            text-decoration: none;
-            float: center;
-        }
-
-        .alert {
-            padding: 20px;
-            margin: 5px;
-            color: #970020;
-            background-color: #ffffff;
-        }
-
-        #bannerimage {
-            width: 100%;
-            background-image: url("/static/assets/circle_w3mail_icon.png");
-            height: 120px;
-            background-color: #000000;
-            background-position: left;
-            background-repeat: no-repeat;
-            margin-left: 10px;
-            margin-bottom: 10px;
+            color: #3f7f9a;
         }
 
         body {
-            font-family: 'PT Mono';
-            font-size: 16px;
-            color: #ffffff;
-            background-color: #000000;
+            background: hsla(172, 85%, 74%, 1);
+            background: linear-gradient(45deg, hsla(172, 85%, 74%, 1) 0%, hsla(225, 60%, 67%, 1) 42%, hsla(319, 74%, 64%, 1) 100%);
+            background: -moz-linear-gradient(45deg, hsla(172, 85%, 74%, 1) 0%, hsla(225, 60%, 67%, 1) 42%, hsla(319, 74%, 64%, 1) 100%);
+            background: -webkit-linear-gradient(45deg, hsla(172, 85%, 74%, 1) 0%, hsla(225, 60%, 67%, 1) 42%, hsla(319, 74%, 64%, 1) 100%);
+            filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#83f5e5", endColorstr="#7A93DE", GradientType=1);
+            background-repeat: no-repeat;
+            width: 100%;
+            min-height: 100vh;
+            height: 100%;
         }
 
-        button {
+        .typewriter h4 {
+            color: white;
+            font-family: 'PT Mono';
+            font-weight: bolder;
+            overflow: hidden;
+            border-right: .15em solid #343a40;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .05em;
+            font-size: 1.1em;
+            animation:
+                typing 2.25s steps(40, end),
+                blink-caret .75s step-end infinite;
+        }
+
+        .typewriter-slow h4 {
+            color: white;
+            font-family: 'PT Mono';
+            font-weight: bolder;
+            overflow: hidden;
+            border-right: .15em solid #343a40;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .05em;
+            font-size: 1.1em;
+            animation:
+                typing 4s steps(40, end),
+                blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: white;
+            }
+        }
+
+        #image_container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            margin-top: 20px;
+            margin-right: 20px;
+            z-index: 100000;
+        }
+
+        #logo_container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            margin-top: 20px;
+            margin-right: 20px;
+        }
+
+        .btn-profile {
+            position: relative;
             display: inline-block;
-            border: 0.1;
-            border-color: #ffffff;
-            padding: 0.5rem 1rem;
-            margin: 0;
-            text-decoration: none;
-            background: #000000;
-            color: #ffffff;
-            font-family: 'PT Mono';
-            font-size: 0.5rem;
-            line-height: 1;
+            padding: 10px;
+            background-color: white;
             cursor: pointer;
-            text-align: center;
-            -webkit-appearance: none;
-            -moz-appearance: none;
+            outline: none;
+            border: 0;
+            vertical-align: middle;
+            text-decoration: none;
+            font-family: 'PT Mono';
+            font-size: 0.6em;
+            color: #343a40;
+            border-radius: 5px;
+            -webkit-transition: width 0.2s;
+            transition: width 0.2s;
         }
 
+        .btn-profile:hover {
+            background-color: #343a40;
+            color: white
+        }
+
+        .btn-profile .btn-profile-text {
+            max-width: 0;
+            display: inline-block;
+            -webkit-transition: color .25s 1.5s, max-width 2s;
+            transition: color .25s 1.5s, max-width 2s;
+            vertical-align: top;
+            white-space: nowrap;
+            overflow: hidden;
+            color: white;
+        }
+
+        .btn-profile:hover .btn-profile-icon {
+            color: white;
+        }
+
+        .btn-profile:hover .btn-profile-text {
+            max-width: 350px;
+            color: white;
+        }
+
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            z-index: 999999;
+            text-align: center;
+        }
+
+        .image-holder {
+            position: absolute;
+            left: 45%;
+            top: 45%;
+            width: 150px;
+            height: 150px;
+        }
+
+        .image-holder img {
+            width: 100%;
+        }
+
+        .scroll {
+            max-height: 700px;
+            overflow-y: scroll;
+        }
+
+        #logo {
+            position: relative;
+            display: inline-block;
+            border-radius: 5px;
+            left: 20px;
+            cursor: pointer;
+            width: 8%;
+        }
     </style>
 </head>
 
 <body>
+    <ul id="sidebar" class="nav flex-column shadow d-flex sidebar mobile-hid collapsed"
+        style="min-height: 100vh; display: none;">
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <div id="bannerimage">
-        <center>
-            <h1 style="text-align: center; position:relative;top:40px;">w3mail</h1>
-        </center>
-    </div>
+        <li class="nav-item logo-holder" style="padding-bottom: 10px;">
+            <div class="text-center text-dark logo py-4 mx-4" style="margin-bottom: 20px;margin-top: -3px;"><a
+                    class="text-dark text-decoration-none" id="title" href="/"
+                    style="float: left; margin-left:25%;margin-top: -2%;font-family: 'PT Mono';"><strong
+                        style="font-size: 0.7em;">w3mail</strong><br></a>
+                        <img  onclick="location.href='/'" src="/static/assets/img/web3_logo_transparent.png" style="position: fixed; left: 10px; top: 10px; display: inline-block; border-radius: 15px; padding: 10px;cursor: pointer; width: 4%;/*z-index: 10000;*/" />
+                <i class="fas fa-bars" id="sidebarToggle" style="float: right;"></i><a class="text-dark float-right"
+                    id="sidebarToggleHolder" href="/"></a>
+            </div>
+        </li>
+        <li class="nav-item" onclick="connectWalletwithMetaMask();"><a class="nav-link text-left text-dark py-1 px-0"
+                style="color:#343a40"><i class="fas fa-sign-in-alt mx-3"></i><span class="text-nowrap mx-2"
+                    style="font-family: 'PT Mono';">Connect Wallet</span></a></li>
+        <li class="nav-item"><a class="nav-link text-left text-dark py-1 px-0" href="{{ url_for('compose') }}"><svg
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em"
+                    fill="currentColor" class="mx-3">
+                    <path
+                        d="M421.7 220.3L188.5 453.4L154.6 419.5L158.1 416H112C103.2 416 96 408.8 96 400V353.9L92.51 357.4C87.78 362.2 84.31 368 82.42 374.4L59.44 452.6L137.6 429.6C143.1 427.7 149.8 424.2 154.6 419.5L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3zM492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75z">
+                    </path>
+                </svg><span class="text-nowrap mx-2" style="font-family: 'PT Mono';">Compose</span></a></li>
+        <li class="nav-item" onclick="retrieveMessages('inbox');"><a class="nav-link text-left text-dark py-1 px-0"
+                style="font-family: 'PT Mono';"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                    width="1em" height="1em" fill="currentColor" class="mx-3">
+                    <path
+                        d="M493.6 163c-24.88-19.62-45.5-35.37-164.3-121.6C312.7 29.21 279.7 0 256.4 0H255.6C232.3 0 199.3 29.21 182.6 41.38C63.88 127.6 43.25 143.4 18.38 163C6.75 172 0 186 0 200.8v247.2C0 483.3 28.65 512 64 512h384c35.35 0 64-28.67 64-64.01V200.8C512 186 505.3 172 493.6 163zM464 448c0 8.822-7.178 16-16 16H64c-8.822 0-16-7.178-16-16V276.7l136.1 113.4C204.3 406.8 229.8 416 256 416s51.75-9.211 71.97-26.01L464 276.7V448zM464 214.2l-166.8 138.1c-23.19 19.28-59.34 19.27-82.47 .0156L48 214.2l.1055-13.48c23.24-18.33 42.25-32.97 162.9-120.6c3.082-2.254 6.674-5.027 10.63-8.094C229.4 65.99 246.7 52.59 256 48.62c9.312 3.973 26.62 17.37 34.41 23.41c3.959 3.066 7.553 5.84 10.76 8.186C421.6 167.7 440.7 182.4 464 200.8V214.2z">
+                    </path>
+                </svg><span class="text-nowrap mx-2" style="font-family: 'PT Mono';">Inbox</span></a></li>
+        <li class="nav-item" onclick="retrieveMessages('outbox');"><a
+                class="nav-link text-left text-dark py-1 px-0"><svg xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" class="mx-3">
+                    <path
+                        d="M0 128C0 92.65 28.65 64 64 64H448C483.3 64 512 92.65 512 128V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V128zM48 128V150.1L220.5 291.7C241.1 308.7 270.9 308.7 291.5 291.7L464 150.1V127.1C464 119.2 456.8 111.1 448 111.1H64C55.16 111.1 48 119.2 48 127.1L48 128zM48 212.2V384C48 392.8 55.16 400 64 400H448C456.8 400 464 392.8 464 384V212.2L322 328.8C283.6 360.3 228.4 360.3 189.1 328.8L48 212.2z">
+                    </path>
+                </svg><span class="text-nowrap mx-2" style="font-family: 'PT Mono';">Outbox</span></a></li>
+        <li class="nav-item"></li>
+        <li class="nav-item dropdown"><a
+                class="dropdown-toggle nav-link text-left text-dark py-1 px-0 position-relative" aria-expanded="false"
+                data-toggle="dropdown" href="#"><i class="fas fa-sliders-h mx-3"></i><span class="text-nowrap mx-2"
+                    style="font-family: 'PT Mono';">Config</span><i
+                    class="fas fa-caret-down float-none float-lg-right fa-sm"></i></a>
+            <div class="dropdown-menu border-0 animated fadeIn"><a class="dropdown-item text-dark" href="#"><span
+                        style="font-family: 'PT Mono';">Address Book</span></a><a class="dropdown-item text-dark"
+                    href="#"><span style="font-family: 'PT Mono';">Address Whitelist</span></a></div>
+        </li>
 
-    <input type="image" src='/static/assets/MetaMaskLogo.png' id='connectWallet' name="connect_wallet"
-        style="float:right; width:7%; height:7%; position:absolute;top:40px;right:0px;" alt="Connect Wallet"
-        onclick="connectWalletwithMetaMask();" />
+        <li class="nav-item"><a class="nav-link text-left text-dark py-1 px-0" href="#"><i
+                    class="fas fa-sign-out-alt mx-3"></i><i class="fa fa-caret-right d-none position-absolute"></i><span
+                    class="text-nowrap mx-2" style="font-family: 'PT Mono';">Log out</span></a></li>
+    </ul>
 
-    <nav>
 
-        <script type="text/javascript" src="{{ url_for('static', filename='scripts/get_messages.js')}}"></script>
-        <button onclick="retrieveMessages('inbox');" class="button">Inbox</button>
-        <button onclick="retrieveMessages('outbox');" class="button">Outbox</button>
-        <a href="{{ url_for('compose') }}"><button type="button", class="button">Compose</button></a>
-        <text id="walletAddress" style="float:right; margin-right: 10px; font-size:0.6em;"></text>
-        <script type="text/javascript" src="{{ url_for('static', filename='scripts/wallet_connect.js')}}"></script>
-       
-
-    </nav>
-    <hr>
     <div class="content">
-        {% for message in get_flashed_messages() %}
-        <div class="alert">{{ message }}</div>
-        {% endfor %}
+        <div id="image_container">
+            <button class="btn-profile" onclick="connectWalletwithMetaMask()">
+                <span class="btn-profile-icon"><i class="fas fa-wallet" aria-hidden="true"
+                        style="padding-left: 5px;"></i></span>
+                <span id="walletAddress" class="btn-profile-text"></span>
+            </button>
+
+        </div>
+        <center>
+            <div id="connectedModal" class="modal fade show" role="dialog" tabindex="-1"
+                style="top: 15% ; height: 100%; width: 100%; position: fixed;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="welcome_message" class="modal-title"
+                                style="font-family: 'PT Mono'; text-align: left;">Welcome to w3mail</h5>
+                        </div>
+                        <div class="modal-body" id="connect_content"
+                            style="font-family: 'PT Mono'; text-align: left; font-size: 1em;">
+                        </div>
+                        <div class="modal-footer"><button id="connectModalButton" class="btn btn-light" type="button"
+                                data-dismiss="modal" onclick="connectWalletwithMetaMask();"
+                                style="font-family: 'PT Mono'; text-align: center; font-size: 0.7em; background-color: #343a40; color:#ffffff;">Connect
+                                to
+                                MetaMask</button><a id="installMetaMask" href="https://metamask.io/download/"
+                                style="font-family: 'PT Mono'; color:#343a40">Go to MetaMask</a></div>
+                    </div>
+                </div>
+            </div>
+        </center>
+
+
+        <button id="composeButton" class="btn-profile" type="button"
+            style="left: 20px;bottom: 20px;position: fixed; font-family: 'PT Mono'; font-size: 1em;"
+            onclick="location.href='{{url_for('compose')}}'">Compose</button>
+
+
         {% block content %} {% endblock %}
     </div>
+
+
+
+    <script src="{{ url_for('static', filename='assets/js/jquery.min.js')}}"></script>
+    <script>
+        $('body').animate({ "padding-left": "0" }, 100)
+    </script>
+    <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/script.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/get_messages.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/wallet_connect.js')}}"></script>
+
+
 </body>
-
-
 
 </html>

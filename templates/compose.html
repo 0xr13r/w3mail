@@ -1,36 +1,46 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
-    <h3>{% block title %} Compose w3mail 🖊️{% endblock %}</h3>
-    <form method="post">
-        <label for="To">To</label>
-        <br>
-        <textarea type="text" name="recipient"
-               placeholder="Paste/type the recipient's ETH address" 
-               cols="180"
-                  >{{ request.form['recipient'] }}</textarea>
-        <br>
-        <label for="content">Message</label>
-        <br>
-        <textarea id="message_content"
-                  name="content"
-                  placeholder="Compose your message here. This will be encrypted with the recipient's public key before sending to IPFS and making avaialble for them to retrieve"
-                  rows="20"
-                  cols="180"
-                  >{{ request.form['content'] }}</textarea>
-        <br>
 
-        <input type="hidden" name="sender" id="sender_address" style="display:none;" value="{{ request.form['sender'] }}">
-        <script type="module" >
-            async function checkConnectedWallet() {
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' })
-                document.getElementById('sender_address').value = accounts[0] ;
-            }
-            checkConnectedWallet()
-        </script>
-        
-
-        <button type="submit">Encrypt and Send</button>
-                
-    </form>
+<div class="container" style="height: 750px;width: 100%;position: relative;vertical-align: middle;">
+    <section class="position-relative py-4 py-xl-5">
+        <div class="container position-relative" style="max-width: 100%;">
+            <div class="row d-flex justify-content-center">
+                <div class="col">
+                    <div class="card"
+                        style="width: 100%;margin-top: -1px;padding-left: 0px;align-self: center;margin-left: -1px;padding-top: 0px;">
+                        <div class="card-body text-center p-sm-5"
+                            style="/*flex: 100 10 auto;*//*-ms-flex: 100 10 auto;*/padding-left: 194px;margin-left: -4px;margin-right: -2px;padding-top: 0px;margin-top: -5px;padding-bottom: 86px;margin-bottom: 0px;">
+                            <h5 class="font-weight-bold mb-3" style="font-family: 'PT Mono'">Compose w3mail</h5>
+                            <form method="post">
+                                <div class="mb-3"><input class="form-control" type="text" id="message_recipient"
+                                        name="recipient" placeholder="Paste/type the recipient's ETH address"
+                                        style="font-family: 'PT Mono'">{{ request.form['recipient'] }}</div>
+                                <div class="mb-3"></div>
+                                <div class="mb-3"><textarea class="form-control" id="message_content" name="content"
+                                        rows="18" style="font-family: 'PT Mono'"
+                                        placeholder="Compose your message here. This will be encrypted with the recipient's public key before sending to IPFS and making avaialble for them to retrieve and decrypt">{{ request.form['content'] }}</textarea>
+                                </div>
+                                <div></div>
+                                <button class="btn btn-primary d-block w-100" type="submit"
+                                    style="font-family: 'PT Mono';">Encrypt and
+                                    Send </button>
+                                <script type="module">
+                                    async function checkConnectedWallet() {
+                                        const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+                                        document.getElementById('sender_address').value = accounts[0];
+                                    }
+                                    checkConnectedWallet()
+                                </script>
+                                <input type="hidden" name="sender" id="sender_address" style="display:none;"
+                                    value="{{ request.form['sender'] }}">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 {% endblock %}
