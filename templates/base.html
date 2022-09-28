@@ -107,6 +107,14 @@
             z-index: 100000;
         }
 
+        #logo_container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            margin-top: 20px;
+            margin-right: 20px;
+        }
+
         .btn-profile {
             position: relative;
             display: inline-block;
@@ -180,19 +188,30 @@
             overflow-y: scroll;
         }
 
+        #logo {
+            position: relative;
+            display: inline-block;
+            border-radius: 5px;
+            left: 20px;
+            cursor: pointer;
+            width: 8%;
+        }
     </style>
 </head>
 
 <body>
-
     <ul id="sidebar" class="nav flex-column shadow d-flex sidebar mobile-hid collapsed"
         style="min-height: 100vh; display: none;">
+
         <li class="nav-item logo-holder" style="padding-bottom: 10px;">
             <div class="text-center text-dark logo py-4 mx-4" style="margin-bottom: 20px;margin-top: -3px;"><a
                     class="text-dark text-decoration-none" id="title" href="/"
-                    style="float: left;margin-top: -4%;font-family: 'PT Mono';"><strong>w3mail</strong><br></a><i
-                    class="fas fa-bars" id="sidebarToggle" style="float: right;"></i><a class="text-dark float-right"
-                    id="sidebarToggleHolder" href="/"></a></div>
+                    style="float: left; margin-left:25%;margin-top: -2%;font-family: 'PT Mono';"><strong
+                        style="font-size: 0.7em;">w3mail</strong><br></a>
+                        <img  onclick="location.href='/'" src="/static/assets/img/web3_logo_transparent.png" style="position: fixed; left: 10px; top: 10px; display: inline-block; border-radius: 15px; padding: 10px;cursor: pointer; width: 4%;/*z-index: 10000;*/" />
+                <i class="fas fa-bars" id="sidebarToggle" style="float: right;"></i><a class="text-dark float-right"
+                    id="sidebarToggleHolder" href="/"></a>
+            </div>
         </li>
         <li class="nav-item" onclick="connectWalletwithMetaMask();"><a class="nav-link text-left text-dark py-1 px-0"
                 style="color:#343a40"><i class="fas fa-sign-in-alt mx-3"></i><span class="text-nowrap mx-2"
@@ -267,8 +286,10 @@
             </div>
         </center>
 
-        <button class="btn-profile" type="button"
-            style="left: 20px;bottom: 20px;position: fixed; background-color: white; color:#343a40; font-family: 'PT Mono'; font-size: 1em;" onclick="location.href='{{url_for('compose')}}'">Compose</button>
+
+        <button id="composeButton" class="btn-profile" type="button"
+            style="left: 20px;bottom: 20px;position: fixed; font-family: 'PT Mono'; font-size: 1em;"
+            onclick="location.href='{{url_for('compose')}}'">Compose</button>
 
 
         {% block content %} {% endblock %}

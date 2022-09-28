@@ -3,6 +3,8 @@ const connectWallet = document.getElementById('connectWallet')
 const walletAddress = document.getElementById('walletAddress')
 const connectToMetaMask = document.getElementById('connect_content')
 const connectModalButton = document.getElementById('connectModalButton')
+const composeButton = document.getElementById('composeButton')
+
 
 function checkInstalled() {
     if (typeof window.ethereum == 'undefined') {
@@ -11,6 +13,7 @@ function checkInstalled() {
         connectModalButton.innerText = "Install Metask"
         $("#connectModalButton").css("display", "none")
         $("#installMetaMask").css("display", "inline-block")
+        $("#composeButton").css("display", "none")
         $('#connectedModal').modal({backdrop: 'static', keyboard: false},'show');
         connectToMetaMask.classList.remove()
         connectToMetaMask.classList.add()
@@ -96,6 +99,7 @@ async function checkConnectedWallet() {
         console.log("MetaMask installed but no wallet is connected")
         connectToMetaMask.innerText = "Please connect to MetaMask to begin 🦊."
         $("#installMetaMask").css("display", "none")
+        $("#composeButton").css("display", "none")
         $('#connectedModal').modal({backdrop: 'static', keyboard: false},'show');
         return;
     }

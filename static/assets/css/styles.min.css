@@ -22,6 +22,7 @@
     font-size: 1.6rem
 }
 
+
 .sidebar .nav-link.active,
 .sidebar .nav-link:hover {
     background-color: #dee3e6;
@@ -86,7 +87,7 @@
     position: absolute !important;
     color: #858791 !important;
     left: 0;
-    top: 0;
+    top: 10;
     padding: 10px;
     z-index: 999;
     float: none !important
@@ -95,9 +96,13 @@
 .sidebar.collapsed {
     width: 0 !important
 }
+
 .sidebar.collapsed .nav-item i {
-    color:white
+    color:white;
+    top: 80px;
+    position: fixed;
 }
+
 
 @media (max-width:991px) {
     .sidebar.mobile-hid .nav-item {
