@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block content %}
 
 <script type="module" src="{{ url_for('static', filename='scripts/message_encrypt_bundled.js')}}"></script>
 <script
@@ -7,8 +8,16 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
+
+<div id="loading">
+    <p class="image-holder">
+        <img src="/static/assets/img/mail_sending_bw.gif" />
+        </p>
+</div>
+
 <script type="text/javascript">
     $(window).bind("load", function () {
+        $("#loading").show();
         jQuery.ajax({
             type: "POST",
             url: '/outbox/' + '{{ data.sender }}',
@@ -21,7 +30,6 @@
             dataType: "json",
             success: function (response) {
                 if (response.success == true) {
-                    alert("Message successfully sent");
                     window.location = "/outbox/" + '{{ data.sender }}';
                 }
                 else {
@@ -36,4 +44,4 @@
     });
 
 </script>
-</html>
+{% endblock %}

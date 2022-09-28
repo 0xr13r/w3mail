@@ -106,18 +106,24 @@
 
 <!-- <div id="overlay"></div> -->
 <center>
-<div id="decryptedMessageBox" class="modal fade show" role="dialog" tabindex="-1" style="height: 750px;width: 100%;position: fixed;">
-    <div class="modal-dialog" role="document" >
-        <div class="modal-content">
-            <div class="modal-header">
-                <text id="messageFrom" class="modal-title" style="font-family: 'PT Mono'; text-align: left;  font-size: 0.7em;"></text><button class="close" type="button" data-dismiss="modal" aria-label="Close" onclick="hideMessage();"><span aria-hidden="true">×</span></button>
+    <div id="decryptedMessageBox" class="modal fade show" role="dialog" tabindex="-1"
+        style="height: 750px;width: 100%;position: fixed;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <text id="messageFrom" class="modal-title"
+                        style="font-family: 'PT Mono'; text-align: left;  font-size: 0.7em;"></text><button
+                        class="close" type="button" data-dismiss="modal" aria-label="Close"
+                        onclick="hideMessage();"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" id="messageContent"
+                    style="font-family: 'PT Mono'; text-align: left; font-size: 0.7em;">
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal"
+                        onclick="hideMessage();">Close</button></div>
             </div>
-            <div class="modal-body" id="messageContent" style="font-family: 'PT Mono'; text-align: left; font-size: 0.7em;">
-            </div>
-            <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal"  onclick="hideMessage();">Close</button></div>
         </div>
     </div>
-</div>
 </center>
 
 <script>
