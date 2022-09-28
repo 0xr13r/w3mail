@@ -4,7 +4,7 @@ from operator import attrgetter
 import base64
 import logging
 import os
-from sqlalchemy import desc, inspect
+from sqlalchemy import desc, inspect, func
 from sqlalchemy.exc import IntegrityError
 from flask import Flask, render_template, request, flash, jsonify
 from flask_cors import CORS
@@ -140,12 +140,12 @@ def outbox(walletAddress):
 @app.route('/compose/', methods=('GET', 'POST'))
 def compose():
     if request.method == 'POST':
-        sender=request.form['sender']
-        recipient = request.form['recipient']
+        sender=str(request.form['sender'])
+        recipient = str(request.form['recipient'])
         message_content = request.form['content']
         message_sent_at = datetime.now().replace(tzinfo=timezone.utc)
-
-        recipient_public_encryption_key = AddressPublicEncryptionKeys.query.filter(AddressPublicEncryptionKeys.wallet_address == recipient).first()
+        
+        recipient_public_encryption_key = AddressPublicEncryptionKeys.query.filter(func.upper(AddressPublicEncryptionKeys.wallet_address) == recipient.upper()).first()
         
         if not recipient_public_encryption_key:
             logging.error("Since the recipient is currently not using w3mail we don't have their public encryption key. You cannot send a message at this time")
