@@ -35969,7 +35969,7 @@ async function decryptMessageWithMM(data, account) {
       dataType: "json",
       success: function (response) {
         if (response.success == true) {
-          window.location = "/inbox/" + accounts[0];
+          return true;
         }
       },
       error: function (err) {
