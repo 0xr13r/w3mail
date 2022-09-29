@@ -20,7 +20,6 @@ async function encryptData(publicKey, message, nonce) {
     )
   );
 
-
   window.encrypted_message = encryptedMessage
   return encryptedMessage;
 }
@@ -30,8 +29,6 @@ async function decryptData(cid) {
 
   console.log("Fetch encrypted message from IPFS")
   const accounts = await window.ethereum.request({ method: 'eth_accounts' })
-
-  console.log(cid);
 
   jQuery.ajax({
     type: "POST",
@@ -62,6 +59,8 @@ async function decryptData(cid) {
 
 async function decryptMessageWithMM(data, account) {
 
+  console.log(data.ipfs_cid)
+
   const decrypt = await window.ethereum.request({
     method: 'eth_decrypt',
     params: [data.encrypted_message_hex, account]
@@ -70,20 +69,35 @@ async function decryptMessageWithMM(data, account) {
   if (decrypt) {
     const decryptedMessage = decrypt.replace('b&#39;', '').replace('&#39;', '')
 
-    var overlay = document.getElementById("overlay");
     var message_box = document.getElementById("messageContent");
     var message_from = document.getElementById("messageFrom");
 
     message_from.innerText =  "From: "+ data.sender_address + "\nSent At:" +data.message_sent_timestamp
     message_box.innerText = atob(decryptedMessage)
     $('#decryptedMessageBox').modal('show');
-    overlay.style.display = "block";
 
-    return true;
+
+    jQuery.ajax({
+      type: "POST",
+      url: '/mark_read',
+      contentType: "application/json",
+      data: JSON.stringify({ "ipfs_cid": data.ipfs_cid }),
+      dataType: "json",
+      success: function (response) {
+        if (response.success == true) {
+          window.location = "/inbox/" + accounts[0];
+        }
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+
   }
-
-  alert("Get to fuck mate - You are unable to decrypt this message as your are not the recipient.");
-  return false;
+  else {
+    alert("Get to fuck mate - You are unable to decrypt this message as your are not the recipient.");
+    return false;
+  };
   
 }
 

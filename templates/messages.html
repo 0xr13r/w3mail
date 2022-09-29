@@ -32,10 +32,16 @@
                                             <th
                                                 style="font-family: 'PT Mono';width: 10%;text-align: left;font-size: 0.7em;">
                                                 Sent At</th>
+                                            <th
+                                                style="font-family: 'PT Mono';width: 5%;text-align: right;font-size: 0.7em;">
+                                                Status</th>
                                             {% else %}
                                             <th
                                                 style="font-family: 'PT Mono';width: 10%;text-align: left;font-size: 0.7em;">
                                                 Received At</th>
+                                            <th
+                                                style="font-family: 'PT Mono';width: 10%;text-align: right;font-size: 0.7em;">
+                                                Last Read</th>
                                             <th
                                                 style="font-family: 'PT Mono';text-align: right;width: 3%;font-size: 0.7em;">
                                                 View</th>
@@ -75,6 +81,25 @@
                                                 style="font-family: 'PT Mono';  width: 10%;text-align: left;font-size: 0.7em;">
                                                 {{
                                                 message['message_sent_timestamp'].strftime("%h %e %I:%M %p") }}</td>
+                                            {% if heading_message == "received" and
+                                            message['is_message_read'] %}
+                                            <td
+                                                style="font-family: 'PT Mono';width: 10%;text-align: right;font-size: 0.7em;">
+                                                {{
+                                                message['message_last_read_timestamp'].strftime("%h %e %I:%M %p") }}
+                                            </td>
+                                            {% elif heading_message == "sent" and message['is_message_read']
+                                            %}
+                                            <td
+                                                style="font-family: 'PT Mono';width: 5%;text-align: right;font-size: 0.7em;">
+                                                Read
+                                            </td>
+                                            {% else %}
+                                            <td
+                                                style="font-family: 'PT Mono';width: 5%;text-align: right;font-size: 0.7em;">
+                                                Unread</td>
+                                            {% endif %}
+
                                             {% if heading_message != "sent" %}
                                             <td
                                                 style="font-family: 'PT Mono';text-align: right;width: 3%;font-size: 0.7em;">
@@ -128,10 +153,8 @@
 
 <script>
     function hideMessage() {
-        var overlay = document.getElementById("overlay");
         var message_box = document.getElementById('messageContent')
         message_box.innerText = null
-        overlay.style.display = "none";
     }
 </script>
 {% endblock %}
