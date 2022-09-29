@@ -196,6 +196,31 @@
             cursor: pointer;
             width: 8%;
         }
+
+
+        .notification {
+            position: fixed; 
+            left: 10px; 
+            top: 10px; 
+            display: inline-block; 
+            border-radius: 15px; 
+            padding: 10px;
+            cursor: pointer; 
+            width: 4%
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -2px;
+            right: -6px;
+            padding: 5px 8px;
+            border-radius: 50%;
+            background: hsla(319, 74%, 64%, 1);
+            color: white;
+            font-family: 'PT Mono';
+            font-size: 0.5em;
+            font-weight: bolder;
+        }
     </style>
 </head>
 
@@ -208,7 +233,12 @@
                     class="text-dark text-decoration-none" id="title" href="/"
                     style="float: left; margin-left:25%;margin-top: -2%;font-family: 'PT Mono';"><strong
                         style="font-size: 0.7em;">w3mail</strong><br></a>
-                        <img  onclick="location.href='/'" src="/static/assets/img/web3_logo_transparent.png" style="position: fixed; left: 10px; top: 10px; display: inline-block; border-radius: 15px; padding: 10px;cursor: pointer; width: 4%;/*z-index: 10000;*/" />
+
+                <a class="notification">
+                    <img onclick="retrieveMessages('inbox');" src="/static/assets/img/web3_logo_transparent.png"
+                        style="position: fixed; left: 10px; top: 10px; display: inline-block; border-radius: 15px; padding: 10px;cursor: pointer; width: 4%" />
+                    <span id='unread_notif_num' class="badge"></span></a>
+
                 <i class="fas fa-bars" id="sidebarToggle" style="float: right;"></i><a class="text-dark float-right"
                     id="sidebarToggleHolder" href="/"></a>
             </div>
@@ -291,6 +321,11 @@
             style="left: 20px;bottom: 20px;position: fixed; font-family: 'PT Mono'; font-size: 1em;"
             onclick="location.href='{{url_for('compose')}}'">Compose</button>
 
+        <!-- <button id="unread_notif_num" class="btn-profile" type="button"
+            style="left: 20px;top: 120px; position: fixed; font-family: 'PT Mono'; font-size: 1em;"
+            onclick="retrieveMessages('inbox');"></button> -->
+
+
 
         {% block content %} {% endblock %}
     </div>
@@ -298,13 +333,42 @@
 
 
     <script src="{{ url_for('static', filename='assets/js/jquery.min.js')}}"></script>
-    <script>
+    <script type="text/javascript">
         $('body').animate({ "padding-left": "0" }, 100)
     </script>
     <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/script.min.js')}}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='scripts/get_messages.js')}}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='scripts/wallet_connect.js')}}"></script>
+    <script type="text/javascript">
+
+
+        async function checkForNewMessages() {
+            const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+            jQuery.ajax({
+                type: "POST",
+                url: '/check_unread',
+                contentType: "application/json",
+                data: JSON.stringify({ "wallet_address": accounts[0] }),
+                dataType: "json",
+                success: function (response) {
+                    if (response.success == true) {
+                        num_messages_unread = response.data
+
+                        unread = document.getElementById('unread_notif_num')
+                        unread.innerText = num_messages_unread
+
+                        return true;
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+
+        checkForNewMessages()
+    </script>
 
 
 </body>

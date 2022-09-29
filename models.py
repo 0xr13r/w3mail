@@ -67,7 +67,7 @@ class Messages(db.Model):
     ipfs_cid = Column(String(255), unique=True)
     message_sent_timestamp = Column(db.DateTime)
     is_message_read = Column(Boolean)
-    message_read_timestamp = Column(db.DateTime)
+    message_last_read_timestamp = Column(db.DateTime)
 
     def __init__(
         self, 
@@ -75,7 +75,7 @@ class Messages(db.Model):
         recipient_address, 
         ipfs_cid,
         is_message_read= False,
-        message_read_timestamp = None,
+        message_last_read_timestamp = None,
 
     ):
         self.sender_address = sender_address
@@ -83,7 +83,7 @@ class Messages(db.Model):
         self.ipfs_cid = ipfs_cid
         self.message_sent_timestamp = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc)
         self.is_message_read = is_message_read
-        self.message_read_timestamp = message_read_timestamp
+        self.message_last_read_timestamp = message_last_read_timestamp
 
     def __repr__(self): 
         return json.dumps({
@@ -92,7 +92,7 @@ class Messages(db.Model):
             "ipfs_cid": self.ipfs_cid,
             "sent_at": self.message_sent_timestamp.strftime("%Y-%m-%d %H:%M:%S"),
             "is_read":self.is_message_read,
-            "read_at": None if not self.message_read_timestamp else self.message_read_timestamp.strftime("%Y-%m-%d %H:%M:%S")
+            "read_at": None if not self.message_last_read_timestamp else self.message_last_read_timestamp.strftime("%Y-%m-%d %H:%M:%S")
         })
         # return "(%r, %r, %r, %r, %r, %r)" %(
         #     self.sender_address,

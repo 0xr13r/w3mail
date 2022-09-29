@@ -4,7 +4,7 @@ from operator import attrgetter
 import base64
 import logging
 import os
-from sqlalchemy import desc, inspect, func
+from sqlalchemy import desc, asc, inspect, func
 from sqlalchemy.exc import IntegrityError
 from flask import Flask, render_template, request, flash, jsonify
 from flask_cors import CORS
@@ -53,6 +53,24 @@ def check_for_messages():
     else:
         return jsonify(success=False)
 
+@app.route('/check_unread', methods=['POST'])
+def check_unread():
+    data = request.get_json()
+    wallet_address =  data['wallet_address']
+    check_unread = (
+        Messages
+        .query.filter(
+            Messages.recipient_address == wallet_address
+        )
+        .filter(
+            Messages.is_message_read == False
+        )
+        .all()
+    )
+    number_of_messages_unread = len(check_unread)
+    
+    return jsonify(success=True, data=number_of_messages_unread)
+
 
 def object_as_dict(obj):
     return {c.key: getattr(obj, c.key)
@@ -79,35 +97,36 @@ def fetch_cid_data():
     else:
         return jsonify(success=False)
 
+@app.route('/mark_read', methods=['POST'])
+def mark_read():
+    data = request.get_json()
+    ipfs_cid = data['ipfs_cid']
+    try:
+        message_metadata = Messages.query.filter(Messages.ipfs_cid == ipfs_cid).first()
+        message_metadata.is_message_read = True
+        message_metadata.message_last_read_timestamp = datetime.now().replace(tzinfo=timezone.utc)
+        message_metadata.update()
+
+        return jsonify(success=True)
+    except Exception as e:
+        logging.error(e)
+        return jsonify(success=False)
+
 @app.route('/inbox/<walletAddress>')
 def inbox(walletAddress):
     messages = (
         Messages
         .query.filter(
             Messages.recipient_address == walletAddress 
-            and Messages.is_message_read == False
         )
         .order_by(
+            asc(Messages.is_message_read),
             desc(Messages.message_sent_timestamp)
         )
         .all()
     )
 
     return render_template('messages.html', messages=messages, heading_message="received")
-
-# @app.route('/read/<walletAddress>')
-# def read(walletAddress):
-#     if request.method == 'POST':
-#         message_cid = request.get_json()
-#         message = Messages.query.filter(Messages.ipfs_cid==message_cid).first()
-#         message.is_message_read = True
-#         message.message_read_timestamp = datetime.now().replace(tzinfo=timezone.utc)
-
-#     messages = Messages.query.filter(Messages.recipient_address == walletAddress and Messages.is_message_read == True).order_by(desc(Messages.message_sent_timestamp)).all()
-#     if messages:
-#         return render_template('messages.html', messages=messages, heading_message="Recieved w3mails 📥")
-#     else:
-#         return render_template('no_messages.html')
 
 @app.route('/outbox/<walletAddress>',  methods=('GET', 'POST'))
 def outbox(walletAddress):
