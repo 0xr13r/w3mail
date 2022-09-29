@@ -47,7 +47,8 @@ def home():
 @app.route('/check_for_messages')
 def check_for_messages():
     wallet_address = request.args.get('walletAddress')
-    check_wallet = AddressPublicEncryptionKeys.query.filter(AddressPublicEncryptionKeys.wallet_address == wallet_address).first()
+    
+    check_wallet = AddressPublicEncryptionKeys.query.filter(func.upper(AddressPublicEncryptionKeys.wallet_address) == wallet_address.upper()).first()
     if check_wallet:
         return jsonify(success=True, data=wallet_address)
     else:
@@ -60,7 +61,7 @@ def check_unread():
     check_unread = (
         Messages
         .query.filter(
-            Messages.recipient_address == wallet_address
+            func.upper(Messages.recipient_address) == wallet_address.upper()
         )
         .filter(
             Messages.is_message_read == False
@@ -117,7 +118,7 @@ def inbox(walletAddress):
     messages = (
         Messages
         .query.filter(
-            Messages.recipient_address == walletAddress 
+            func.upper(Messages.recipient_address) == walletAddress.upper()
         )
         .order_by(
             asc(Messages.is_message_read),
